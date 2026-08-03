@@ -98,6 +98,7 @@ glimpse(long)
 
 bs_studyoutcomecoverage_plot = plot_study_outcome_coverage( data =long,
                                               study_order = NULL,
+                                              outcomes = c("BMI", "HTN", "SBP", "DBP"),
                                               breaks = c(3, 6, 9, 12, 18, 24, 36, 48, 60, 70),
                                               labels = c(
                                                 "3", "6", "9", "12",
@@ -111,6 +112,7 @@ bs_studyoutcomecoverage_plot = plot_study_outcome_coverage( data =long,
                                               axis_text_x_angle = 0,
                                               axis_text_x_size = 12,
                                               axis_text_y_size = 12,
+                                              hjust_size = 0.5,
                                               bmi_fill = "grey90",
                                               legend = TRUE)
 bs_studyoutcomecoverage_plot
