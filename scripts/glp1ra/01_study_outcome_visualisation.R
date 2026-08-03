@@ -18,14 +18,14 @@ source('R/shared/followup_evidence_mapping.R')
 # Read in the data----
 #############################
 
-study_outcomes <- read_excel('./data/bs/processed/ExploratoryDataAnalysis.xlsx', sheet = 'StudyID_Followupmatrix')
+study_outcomes <- read_excel('./data/glp1ra/processed/ExploratoryDataanalysis_GLP1RAs.xlsx', sheet = 'StudyID_Followupmatrix')
 glimpse(study_outcomes)
 
 # Mutate the Study column 
 study_outcomes <- study_outcomes |> 
   mutate(Study = str_replace(Study, "_(\\d{4})$", " (\\1)"))
 
-study_outcomes
+glimpse(study_outcomes)
 # Convert to long format----
 long <- study_outcomes |> 
   pivot_longer(
@@ -86,43 +86,45 @@ long
 long <- long |> 
   mutate(
     Month_plot = case_when(
-      Month == 120 ~ 70,
+      Month <= 24 ~ Month,            # preserve early dense follow-up
+      Month > 24 & Month <= 65 ~ 
+        24 + (Month - 24) * 0.4,       # compress 24-65 months
       TRUE ~ Month
     )
   )
+  
 glimpse(long)
 
 #####################################################
 # Visualise outcome-time points map----
 ####################################################
 
-bs_studyoutcomecoverage_plot = plot_study_outcome_coverage( data =long,
-                                              study_order = NULL,
-                                              outcomes = c("BMI", "HTN", "SBP", "DBP"),
-                                              breaks = c(3, 6, 9, 12, 18, 24, 36, 48, 60, 70),
+glp1ra_studyoutcomecoverage_plot = plot_study_outcome_coverage( data =long,
+                                              study_order = NULL,outcomes = c("BMI", "SBP", "DBP"),
+                                              breaks = c(3, 4, 6, 7, 8, 9, 10, 11, 12, 16, 17, 24, 29.2, 40.4,70),
                                               labels = c(
-                                                "3", "6", "9", "12",
-                                                "18", "24", "36",
-                                                "48", "60", "...120"
+                                                "3", "4", "6", "7", "8", "9",
+                                                "10", "11", "12", "16", "17", 
+                                                "24", "37", "65",'..120'
                                               ),
                                               xlab = "Follow-up time (months)",
                                               ylab = "",
                                               xlab_size = 13,
                                               ylab_size = 13,
                                               axis_text_x_angle = 0,
-                                              axis_text_x_size = 12,
+                                              axis_text_x_size = 10,
                                               axis_text_y_size = 12,
                                               hjust_size = 0.5,
                                               bmi_fill = "grey90",
                                               legend = TRUE)
-bs_studyoutcomecoverage_plot
+glp1ra_studyoutcomecoverage_plot
 
 ###########################
 # Save the plot-------
 ###########################
 ggsave(
-  filename = "output/bs/figures/studyoutcome_coverage.jpeg",
-  plot = bs_studyoutcomecoverage_plot,
+  filename = "output/glp1ra/figures/studyoutcome_coverage.jpeg",
+  plot = glp1ra_studyoutcomecoverage_plot,
   width = 12,      # inches
   height = 8,      # inches
   units = "in",
