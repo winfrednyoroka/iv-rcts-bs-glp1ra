@@ -21,9 +21,33 @@ study_outcome_map
 
 studysheet <- read_excel(file, sheet = 'Studysheet', skip = 1) # skips first row which is a header
 studysheet
+studysheet <- studysheet |> 
+  rename('last_name' = 'First author last name',
+         'publication_year' = 'Publication year',
+         'number_treatmentarms' = 'Number of comparisons',
+         'studysheetNotes' = 'Notes'
+         
+  )
+
+glimpse(studysheet)
 
 trialarms <- read_excel(file, sheet = 'Trialarms', skip = 1) # skips first row which is a header
-trialarms
+glimpse(trialarms)
+trialarms <- trialarms |> 
+  rename('baseline_N_per_arm' = 'SampleSize of treatment/comparator',
+         'age' = 'Age of the participants per trial arm',
+         'female_count' = 'Number of females',
+         'female_pct' = 'Proportion (percent) of females',
+         'treatment_arm_nameinitials' = 'TreatmentArmName',
+         'comments'='...11',
+         'treatment_group' = 'TrialArmType',
+         'dosage' = 'Dosage for GLP1RAs',
+         'dosage_units' = 'Dosage units',
+         
+         
+  )
+glimpse(trialarms)
+
 
 baseline <- read_excel(file,sheet = 'Baselinesheet', skip = 1) # skips first row which is a header
 baseline
