@@ -49,8 +49,23 @@ trialarms <- trialarms |>
 glimpse(trialarms)
 
 
-baseline <- read_excel(file,sheet = 'Baselinesheet', skip = 1) # skips first row which is a header
-baseline
+baseline <- read_excel(file, sheet = 'Baselinesheet', skip = 1) # skips first row which is a header
+glimpse(baseline)
+baseline <- baseline |> 
+  rename('baseline_mean' = 'Mean',
+         'baseline_lowerbound' = 'lower_CI',
+         'baseline_upperbound' = 'upper_CI',
+         'baseline_sd' = 'SD',
+         'baseline_se' = 'SE',
+         'baseline_CI_level' = 'CI_level (%)',
+         'units' = 'Units of measurement',
+         'hyertension_estimate_freetext' = 'Note, free text describing hypertension trait such as number of hypertensives',
+         'numberhypertensive_freetext' = 'Number of people using antihypertensives or were hypertensive @baseline',
+         'prophypertensiveatbaseline' = 'Proportion of people using antihypertensives or were hypertensive @baseline',
+         'Notes_estimatororsubgroup' = 'Notes fo any estimate or group',
+         'ARMID' = 'ArmID'
+  )
+glimpse(baseline)
 
 # Results (actual means and change form baseline)
 post <- read_excel(file, sheet = 'Resultssheet', skip = 1) # skips first row which is a header
