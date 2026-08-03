@@ -18,7 +18,8 @@ source('R/shared/followup_evidence_mapping.R')
 # Read in the data----
 #############################
 
-study_outcomes <- read_excel('./data/bs/processed/ExploratoryDataAnalysis.xlsx', sheet = 'StudyID_Followupmatrix')
+study_outcomes <- readRDS('data/bs/processed/bs_study_outcome_map.rds')
+
 glimpse(study_outcomes)
 
 # Mutate the Study column 
