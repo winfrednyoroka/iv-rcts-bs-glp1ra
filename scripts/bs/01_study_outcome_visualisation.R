@@ -7,7 +7,10 @@
 # schedules will be conducted prior to IV analyses to assess evidence coverage,
 # identify sparsity across outcomes and time points to inform analysis and reporting strategy.
 ###################################################################################################
-# Load the function
+
+########################################
+# Load the libraries and functions----
+########################################
 source('R/shared/setup.R')
 source('R/shared/followup_evidence_mapping.R')
 
@@ -92,3 +95,36 @@ glimpse(long)
 #####################################################
 # Visualise outcome-time points map----
 ####################################################
+
+bs_studyoutcomecoverage_plot = plot_study_outcome_coverage( data =long,
+                                              study_order = NULL,
+                                              breaks = c(3, 6, 9, 12, 18, 24, 36, 48, 60, 70),
+                                              labels = c(
+                                                "3", "6", "9", "12",
+                                                "18", "24", "36",
+                                                "48", "60", "...120"
+                                              ),
+                                              xlab = "Follow-up time (months)",
+                                              ylab = "",
+                                              xlab_size = 13,
+                                              ylab_size = 13,
+                                              axis_text_x_angle = 0,
+                                              axis_text_x_size = 12,
+                                              axis_text_y_size = 12,
+                                              bmi_fill = "grey90",
+                                              legend = TRUE)
+bs_studyoutcomecoverage_plot
+
+###########################
+# Save the plot-------
+###########################
+ggsave(
+  filename = "output/bs/figures/studyoutcome_coverage.jpeg",
+  plot = bs_studyoutcomecoverage_plot,
+  width = 12,      # inches
+  height = 8,      # inches
+  units = "in",
+  dpi = 600
+)
+
+
