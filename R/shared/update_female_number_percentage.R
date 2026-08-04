@@ -46,32 +46,29 @@ fill_female_data <- function(data,
                              sample_size_col = "samplesize",
                              female_n_col = "female_n",
                              female_prop_col = "female_prop") {
-  
-  df <- data 
-  
+  df <- data
+
   # Fill missing female counts using proportion
   missing_n <- is.na(df[[female_n_col]]) &
     !is.na(df[[female_prop_col]]) &
     !is.na(df[[sample_size_col]])
-  
+
   df[[female_n_col]][missing_n] <- round(
     (df[[female_prop_col]][missing_n] / 100) *
       df[[sample_size_col]][missing_n]
   )
-  
+
   # Fill missing proportions using female count
   missing_prop <- is.na(df[[female_prop_col]]) &
     !is.na(df[[female_n_col]]) &
     !is.na(df[[sample_size_col]]) &
     df[[sample_size_col]] > 0
-  
+
   df[[female_prop_col]][missing_prop] <- round(
     (df[[female_n_col]][missing_prop] /
-       df[[sample_size_col]][missing_prop]) * 100,
+      df[[sample_size_col]][missing_prop]) * 100,
     2
   )
-  
+
   df
 }
-
-

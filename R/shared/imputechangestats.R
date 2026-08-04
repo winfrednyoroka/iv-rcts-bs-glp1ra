@@ -67,90 +67,85 @@ impute_change_stats <- function(data,
                                 n_col = "SampleSize",
                                 ci_level_col = "CI_level (%)",
                                 default_ci = 95) {
-  
   z_from_ci <- function(ci_level) {
     stats::qnorm(1 - (1 - ci_level / 100) / 2)
   }
-  
+
   df <- data
-  
+
   for (i in seq_len(nrow(df))) {
-    
-    mean_val  <- df[[mean_col]][i]
+    mean_val <- df[[mean_col]][i]
     lower_val <- df[[lower_col]][i]
     upper_val <- df[[upper_col]][i]
-    sd_val    <- df[[sd_col]][i]
-    se_val    <- df[[se_col]][i]
-    n_val     <- df[[n_col]][i]
-    
+    sd_val <- df[[sd_col]][i]
+    se_val <- df[[se_col]][i]
+    n_val <- df[[n_col]][i]
+
     ci_level <- if (!is.null(ci_level_col) &&
-                    ci_level_col %in% names(df) &&
-                    !is.na(df[[ci_level_col]][i])) {
+      ci_level_col %in% names(df) &&
+      !is.na(df[[ci_level_col]][i])) {
       df[[ci_level_col]][i]
     } else {
       default_ci
     }
-    
+
     z <- z_from_ci(ci_level)
-    
+
     ####################################################################
     # Rule 1:
     # Mean + CI + n -> SE -> SD
     ####################################################################
     if (!is.na(mean_val) &&
-        !is.na(lower_val) &&
-        !is.na(upper_val) &&
-        !is.na(n_val)) {
-      
+      !is.na(lower_val) &&
+      !is.na(upper_val) &&
+      !is.na(n_val)) {
       if (is.na(se_val)) {
         se_val <- (upper_val - lower_val) / (2 * z)
         df[[se_col]][i] <- se_val
       }
-      
+
       if (is.na(sd_val)) {
         sd_val <- se_val * sqrt(n_val)
         df[[sd_col]][i] <- sd_val
       }
     }
-    
+
     ####################################################################
     # Rule 2:
     # Mean + SD + n -> SE -> CI
     ####################################################################
     if (!is.na(mean_val) &&
-        !is.na(sd_val) &&
-        !is.na(n_val)) {
-      
+      !is.na(sd_val) &&
+      !is.na(n_val)) {
       if (is.na(se_val)) {
         se_val <- sd_val / sqrt(n_val)
         df[[se_col]][i] <- se_val
       }
-      
+
       if (is.na(lower_val)) {
         df[[lower_col]][i] <- mean_val - z * se_val
       }
-      
+
       if (is.na(upper_val)) {
         df[[upper_col]][i] <- mean_val + z * se_val
       }
     }
-    
+
     ####################################################################
     # Rule 3:
     # Mean + SE + n -> SD -> CI
     ####################################################################
     if (!is.na(mean_val) &&
-        !is.na(se_val) &&
-        !is.na(n_val)) {
-      
+      !is.na(se_val) &&
+      !is.na(n_val)) {
       if (is.na(sd_val)) {
         df[[sd_col]][i] <- se_val * sqrt(n_val)
       }
-      
+
       if (is.na(lower_val)) {
         df[[lower_col]][i] <- mean_val - z * se_val
       }
-      
+
       if (is.na(upper_val)) {
         df[[upper_col]][i] <- mean_val + z * se_val
       }
@@ -159,6 +154,6 @@ impute_change_stats <- function(data,
     # Rule 4 & 5 automatically leave values missing
     ####################################################################
   }
-  
+
   df
 }

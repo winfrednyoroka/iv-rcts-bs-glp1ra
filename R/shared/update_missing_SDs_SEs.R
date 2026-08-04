@@ -53,40 +53,32 @@
 #     report standard deviations directly.
 ############################################################################
 calc_sd_se_from_ci <- function(
-    data,
-    lower_col,
-    upper_col,
-    n_col,
-    se_col,
-    sd_col,
-    ci_level = 0.95
+  data,
+  lower_col,
+  upper_col,
+  n_col,
+  se_col,
+  sd_col,
+  ci_level = 0.95
 ) {
-  
   z <- qnorm(1 - (1 - ci_level) / 2)
-  
+
   data %>%
     dplyr::mutate(
-      
       {{ se_col }} := dplyr::if_else(
         is.na({{ se_col }}) &
           !is.na({{ lower_col }}) &
           !is.na({{ upper_col }}),
-        
         ({{ upper_col }} - {{ lower_col }}) /
           (2 * z),
-        
         {{ se_col }}
       ),
-      
       {{ sd_col }} := dplyr::if_else(
         is.na({{ sd_col }}) &
           !is.na({{ se_col }}) &
           !is.na({{ n_col }}),
-        
         {{ se_col }} * sqrt({{ n_col }}),
-        
         {{ sd_col }}
       )
-      
     )
 }
