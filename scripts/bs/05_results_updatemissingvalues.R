@@ -15,3 +15,13 @@ source('R/shared/setup.R')
 source('R/shared/imputechangestats.R')
 source('R/shared/update_missing_CIs.R')
 source('R/shared/update_missing_SDs_SEs.R')
+
+####################################################
+# Read in the data ----
+###################################################
+baseline <- readRDS('data/bs/processed/Study_trialarms_baseline_CIsSDsSEs_updated.rds')
+glimpse(baseline)
+change <- readRDS('data/bs/processed/change.rds')
+glimpse(change)
+post <- readRDS('data/bs/processed/post.rds')
+glimpse(post)
