@@ -51,6 +51,7 @@ glimpse(trialarms)
 
 baseline <- read_excel(file, sheet = 'Baselinesheet', skip = 1) # skips first row which is a header
 glimpse(baseline)
+# Rename some column names
 baseline <- baseline |> 
   rename('baseline_mean' = 'Mean',
          'baseline_lowerbound' = 'lower_CI',
@@ -64,7 +65,25 @@ baseline <- baseline |>
          'prophypertensiveatbaseline' = 'Proportion of people using antihypertensives @baseline',
          'ARMID' = 'ArmID'
   )
-glimpse(baseline)
+glimpse(baseline) # 192 rows
+
+######################################################################################################
+# Clean up the baseline of non-continuous data----
+# Drop rows with hypertension as outcome, baseline_mean=NA, Note column has 24 h ambulatory BP
+#####################################################################################################
+# Filter out Rows with Hypertension (n = 24) as outcome (filter or filter_out)----
+baseline <- filter(baseline,Outcome != 'Hypertension')
+glimpse(baseline) # 168 rows
+# Filter out the mean_baseline is NA (n =4) (the authors reported, SDs and SEs only)
+baseline <- filter(baseline,!is.na(baseline_mean))
+glimpse(baseline) # 164 rows
+# Filter out the Note column for string if entry starts with 24-h ambulatory (n = 8)
+baseline <- filter(baseline,!grepl('24-h', Note))  # 156 rows
+glimpse(baseline) # 156 rows
+# Filter out the Note column for string if entry starts with median (n=3)
+baseline <- filter(baseline, !grepl('Median', Note)) # N = 153
+glimpse(baseline) # 153 rows
+
 
 # Results (actual means and change form baseline)
 post <- read_excel(file, sheet = 'Resultssheet', skip = 1) # skips first row which is a header
