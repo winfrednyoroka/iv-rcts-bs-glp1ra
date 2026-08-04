@@ -177,7 +177,7 @@ create_results_values <- function(
   sd_change <- enquo(sd_change)
   sample_size <- enquo(sample_size)
 
-  data %>%
+  data |> 
     mutate(
       !!paste0(prefix, "_mean") :=
         !!baseline_mean + !!mean_change,

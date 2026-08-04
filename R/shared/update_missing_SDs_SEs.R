@@ -63,7 +63,7 @@ calc_sd_se_from_ci <- function(
 ) {
   z <- qnorm(1 - (1 - ci_level) / 2)
 
-  data %>%
+  data |> 
     dplyr::mutate(
       {{ se_col }} := dplyr::if_else(
         is.na({{ se_col }}) &
