@@ -121,48 +121,47 @@
 #
 ###############################################################
 plot_study_outcome_coverage <- function(
-    data,
-    study_order = NULL,
-    outcomes = c("BMI", "HTN", "SBP", "DBP"),
-    breaks = c(3, 6, 9, 12, 18, 24, 36, 48, 60, 70),
-    labels = c(
-      "3m", "6m", "9m", "12m",
-      "18m", "24m", "36m",
-      "48m", "60m", "120m"
-    ),
-    xlab = "Follow-up time (months)",
-    ylab = "Author (Year)",
-    xlab_size = 13,
-    ylab_size = 13,
-    axis_text_x_angle = 0,
-    axis_text_x_size = 12,
-    axis_text_y_size = 12,
-    hjust_size = 0.5,
-    bmi_fill = "grey90",
-    legend = TRUE
+  data,
+  study_order = NULL,
+  outcomes = c("BMI", "HTN", "SBP", "DBP"),
+  breaks = c(3, 6, 9, 12, 18, 24, 36, 48, 60, 70),
+  labels = c(
+    "3m", "6m", "9m", "12m",
+    "18m", "24m", "36m",
+    "48m", "60m", "120m"
+  ),
+  xlab = "Follow-up time (months)",
+  ylab = "Author (Year)",
+  xlab_size = 13,
+  ylab_size = 13,
+  axis_text_x_angle = 0,
+  axis_text_x_size = 12,
+  axis_text_y_size = 12,
+  hjust_size = 0.5,
+  bmi_fill = "grey90",
+  legend = TRUE
 ) {
-  
   require(ggplot2)
   require(dplyr)
-  
+
   # Keep only outcomes available in the dataset
   outcomes_present <- intersect(
     outcomes,
     names(data)
   )
-  
-  if(length(outcomes_present) == 0){
+
+  if (length(outcomes_present) == 0) {
     stop("No outcome variables found in data.")
   }
-  
+
   # Study ordering
-  
+
   if (is.null(study_order)) {
     study_levels <- levels(factor(data$Study))
   } else {
     study_levels <- rev(study_order$Study)
   }
-  
+
   p <- ggplot(
     data,
     aes(
@@ -173,12 +172,11 @@ plot_study_outcome_coverage <- function(
     scale_y_discrete(
       limits = study_levels
     )
-  
-  
+
+
   # ---- BMI square ----
-  
+
   if ("BMI" %in% outcomes_present) {
-    
     p <- p +
       geom_point(
         data = filter(data, BMI),
@@ -188,12 +186,11 @@ plot_study_outcome_coverage <- function(
         colour = bmi_fill
       )
   }
-  
-  
+
+
   # ---- HTN outer circle ----
-  
+
   if ("HTN" %in% outcomes_present) {
-    
     p <- p +
       geom_point(
         data = filter(data, HTN),
@@ -203,12 +200,11 @@ plot_study_outcome_coverage <- function(
         fill = NA
       )
   }
-  
-  
+
+
   # ---- SBP circle ----
-  
+
   if ("SBP" %in% outcomes_present) {
-    
     p <- p +
       geom_point(
         data = filter(data, SBP),
@@ -218,12 +214,11 @@ plot_study_outcome_coverage <- function(
         fill = NA
       )
   }
-  
-  
+
+
   # ---- DBP dot ----
-  
+
   if ("DBP" %in% outcomes_present) {
-    
     p <- p +
       geom_point(
         data = filter(data, DBP),
@@ -232,10 +227,10 @@ plot_study_outcome_coverage <- function(
         colour = "black"
       )
   }
-  
-  
+
+
   # ---- Base theme ----
-  
+
   p <- p +
     scale_x_continuous(
       breaks = breaks,
@@ -252,50 +247,44 @@ plot_study_outcome_coverage <- function(
       panel.border = element_blank(),
       panel.grid.major = element_blank(),
       panel.grid.minor = element_blank(),
-      
       axis.line.x = element_line(colour = "black"),
       axis.line.y = element_line(colour = "black"),
-      
       axis.text.x = element_text(
         size = axis_text_x_size,
         angle = axis_text_x_angle,
         hjust = hjust_size
       ),
-      
       axis.text.y = element_text(
         size = axis_text_y_size
       ),
-      
       axis.title.x = element_text(
         size = xlab_size,
         face = "bold"
       ),
-      
       axis.title.y = element_text(
         size = ylab_size,
         face = "bold"
       )
     )
-  
-  
+
+
   # ---- Dynamic legend ----
-  
+
   if (legend) {
-    
     shape_values <- c(
       BMI = 22,
       HTN = 21,
       SBP = 21,
       DBP = 16
     )
-    
+
     labels_values <- c(
       BMI = "Body mass index",
       HTN = "Hypertension",
       SBP = "Systolic blood pressure",
       DBP = "Diastolic blood pressure"
     )
-    
+
     p <- p +
       scale_shape_manual(
         name = "Outcomes",
@@ -309,16 +298,12 @@ plot_study_outcome_coverage <- function(
         legend.title = element_text(face = "bold"),
         legend.text = element_text(size = 11)
       )
-    
   } else {
-    
     p <- p +
       theme(
         legend.position = "none"
       )
   }
-  
+
   return(p)
 }
-
-

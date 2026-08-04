@@ -162,42 +162,37 @@
 ##################################################################################
 
 create_results_values <- function(
-    data,
-    baseline_mean,
-    baseline_sd,
-    mean_change,
-    sd_change,
-    sample_size,
-    r = 0.7,
-    prefix = "followup"
+  data,
+  baseline_mean,
+  baseline_sd,
+  mean_change,
+  sd_change,
+  sample_size,
+  r = 0.7,
+  prefix = "followup"
 ) {
-  
   baseline_mean <- enquo(baseline_mean)
-  baseline_sd   <- enquo(baseline_sd)
-  mean_change   <- enquo(mean_change)
-  sd_change     <- enquo(sd_change)
-  sample_size   <- enquo(sample_size)
-  
+  baseline_sd <- enquo(baseline_sd)
+  mean_change <- enquo(mean_change)
+  sd_change <- enquo(sd_change)
+  sample_size <- enquo(sample_size)
+
   data %>%
     mutate(
-      !!paste0(prefix, "_mean") := 
+      !!paste0(prefix, "_mean") :=
         !!baseline_mean + !!mean_change,
-      
-      !!paste0(prefix, "_sd") := 
+      !!paste0(prefix, "_sd") :=
         sqrt(
           (!!baseline_sd)^2 +
             (!!sd_change)^2 +
             2 * r * !!baseline_sd * !!sd_change
         ),
-      
       !!paste0(prefix, "_se") :=
         .data[[paste0(prefix, "_sd")]] /
-        sqrt(!!sample_size),
-      
+          sqrt(!!sample_size),
       !!paste0(prefix, "_lower") :=
         .data[[paste0(prefix, "_mean")]] -
         1.96 * .data[[paste0(prefix, "_se")]],
-      
       !!paste0(prefix, "_upper") :=
         .data[[paste0(prefix, "_mean")]] +
         1.96 * .data[[paste0(prefix, "_se")]]

@@ -15,7 +15,7 @@
 #   3. If lower_CI or upper_CI are missing:
 #      Mean ± z * SE
 #
-#   
+#
 # Assumptions:
 #   - 95% confidence interval (z = 1.96).
 #   - sample_size is greater than 0 when calculating SEs.
@@ -51,61 +51,62 @@
 ############################################################################
 
 update_confidence_bounds <- function(
-    data,
-    mean_col = "Mean",
-    standard_deviation_col = "SD",
-    standard_error_col = "SE",
-    sample_size_col = "baseline_N_per_arm",
-    lower_bound_col = "lower_CI",
-    upper_bound_col = "upper_CI",
-    z = 1.96,
-    digits = 2
+  data,
+  mean_col = "Mean",
+  standard_deviation_col = "SD",
+  standard_error_col = "SE",
+  sample_size_col = "baseline_N_per_arm",
+  lower_bound_col = "lower_CI",
+  upper_bound_col = "upper_CI",
+  z = 1.96,
+  digits = 2
 ) {
-  
   df <- data
-  
+
   # Calculate missing SE
   missing_se <- is.na(df[[standard_error_col]]) &
     !is.na(df[[standard_deviation_col]]) &
     !is.na(df[[sample_size_col]]) &
     df[[sample_size_col]] > 0
-  
+
   df[[standard_error_col]][missing_se] <- round(
     df[[standard_deviation_col]][missing_se] /
-    sqrt(df[[sample_size_col]][missing_se]), digits)
-  
+      sqrt(df[[sample_size_col]][missing_se]), digits
+  )
+
   # Calculate missing SD
   missing_sd <- is.na(df[[standard_deviation_col]]) &
     !is.na(df[[standard_error_col]]) &
     !is.na(df[[sample_size_col]]) &
     df[[sample_size_col]] > 0
-  
+
   df[[standard_deviation_col]][missing_sd] <- round(
     df[[standard_error_col]][missing_sd] *
-    sqrt(df[[sample_size_col]][missing_sd]), digits)
-  
+      sqrt(df[[sample_size_col]][missing_sd]), digits
+  )
+
   # Lower CI
   missing_lower <- is.na(df[[lower_bound_col]]) &
     !is.na(df[[mean_col]]) &
     !is.na(df[[standard_error_col]])
-  
+
   df[[lower_bound_col]][missing_lower] <- round(
     df[[mean_col]][missing_lower] -
       z * df[[standard_error_col]][missing_lower],
     digits
   )
-  
+
   # Upper CI
   missing_upper <- is.na(df[[upper_bound_col]]) &
     !is.na(df[[mean_col]]) &
     !is.na(df[[standard_error_col]])
-  
+
   df[[upper_bound_col]][missing_upper] <- round(
     df[[mean_col]][missing_upper] +
       z * df[[standard_error_col]][missing_upper],
     digits
   )
-  
+
   df
 }
 
@@ -123,8 +124,9 @@ test_data <- data.frame(
 )
 test_data
 
-update_confidence_bounds(data=test_data,mean_col = 'Mean',standard_deviation_col = 'SD',
-                         standard_error_col = 'SE',sample_size_col = 'baseline_N_per_arm',
-                         lower_bound_col = 'lower_CI',upper_bound_col = 'upper_CI', z = 1.96,
-                         digits = 2)
-
+update_confidence_bounds(
+  data = test_data, mean_col = "Mean", standard_deviation_col = "SD",
+  standard_error_col = "SE", sample_size_col = "baseline_N_per_arm",
+  lower_bound_col = "lower_CI", upper_bound_col = "upper_CI", z = 1.96,
+  digits = 2
+)
