@@ -25,3 +25,19 @@ change <- readRDS('data/bs/processed/change.rds')
 glimpse(change)
 post <- readRDS('data/bs/processed/post.rds')
 glimpse(post)
+
+##############################################################
+# Update and impute missing change from baseline values----
+# Use Imputestats function
+#############################################################
+change_updated <- impute_change_stats(data = change,mean_col = 'change_mean', lower_col = 'change_lowerbound', upper_col = 'change_upperbound',sd_col = 'change_sd',
+                      se_col = 'change_se',n_col = 'change_samplesize', ci_level_col = 'change_CI_level', default_ci = 95)
+glimpse(change_updated)
+
+##############################################################
+# Join baseline and change_updated ----
+# Calculate the results form baseline and change_updated
+#############################################################
+change_baseline <- change_updated |> 
+  left_join(baseline, by = c('ARMID','Outcome'))
+glimpse(change_baseline)
