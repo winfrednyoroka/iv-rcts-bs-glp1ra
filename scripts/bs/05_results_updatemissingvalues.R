@@ -15,6 +15,7 @@ source('R/shared/setup.R')
 source('R/shared/imputechangestats.R')
 source('R/shared/update_missing_CIs.R')
 source('R/shared/update_missing_SDs_SEs.R')
+source('R/shared/update_results_fromchangeandbaseline.R')
 
 ####################################################
 # Read in the data ----
@@ -30,14 +31,26 @@ glimpse(post)
 # Update and impute missing change from baseline values----
 # Use Imputestats function
 #############################################################
-change_updated <- impute_change_stats(data = change,mean_col = 'change_mean', lower_col = 'change_lowerbound', upper_col = 'change_upperbound',sd_col = 'change_sd',
+change_updated <- impute_change_stats(data = change, mean_col = 'change_mean', lower_col = 'change_lowerbound', upper_col = 'change_upperbound',sd_col = 'change_sd',
                       se_col = 'change_se',n_col = 'change_samplesize', ci_level_col = 'change_CI_level', default_ci = 95)
 glimpse(change_updated)
 
 ##############################################################
 # Join baseline and change_updated ----
 # Calculate the results form baseline and change_updated
+# use update_results_fromchangeandbaseline function
 #############################################################
 change_baseline <- change_updated |> 
   left_join(baseline, by = c('ARMID','Outcome'))
 glimpse(change_baseline)
+results_change_baseline <- create_results_values(data = change_baseline, baseline_mean = baseline_mean,baseline_sd = baseline_sd,
+                                                 mean_change = change_mean,sd_change = change_sd, sample_size = change_samplesize, 
+                                                 r = .7, prefix = 'results')
+glimpse(results_change_baseline)
+
+##############################################################
+# Update results; post intervention mean values----
+# Use update CI and calc sdand se functions
+#############################################################
+
+
