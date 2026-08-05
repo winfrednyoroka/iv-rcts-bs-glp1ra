@@ -132,3 +132,9 @@ all_post_results <- bind_rows(
 glimpse(all_post_results) # 262 rows
 all_post_results$Outcome
 
+###############################################################
+#  Save all updated results to be used by the next script----
+##############################################################
+saveRDS(all_post_results, file = 'data/bs/processed/post_results_updated.rds')
+
+
