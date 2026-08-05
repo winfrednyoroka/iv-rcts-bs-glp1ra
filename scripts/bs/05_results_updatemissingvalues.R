@@ -48,11 +48,87 @@ glimpse(change_baseline)
 results_change_baseline <- create_results_values(
   data = change_baseline, baseline_mean = baseline_mean, baseline_sd = baseline_sd,
   mean_change = change_mean, sd_change = change_sd, sample_size = change_samplesize,
-  r = .7, prefix = "results"
+  r = .7, prefix = "post"
 )
 glimpse(results_change_baseline)
 
 ##############################################################
 # Update results; post intervention mean values----
-# Use update CI and calc sdand se functions
+# Use update CI and calc sd and se functions
 #############################################################
+glimpse(baseline)
+glimpse(post)
+######################################################
+# Fill in the CIs, SDs and SEs where necessary----
+# Use the update_confidence_bounds function
+# Use the Calc_SD_SE, to update the SDs and SEs
+######################################################
+post_ci <- update_confidence_bounds(data = post,
+                                        mean_col = "post_mean",
+                                        standard_deviation_col = "post_sd",
+                                        standard_error_col = "post_se",
+                                        sample_size_col = "post_samplesize",
+                                        lower_bound_col = "post_lowerbound",
+                                        upper_bound_col = "post_upperbound",
+                                        z = 1.96,
+                                        digits = 2)
+glimpse(post_ci)
+
+#################################
+# Update the SDs and SEs ----
+#################################
+
+post_ci_sd_se <- calc_sd_se_from_ci( data = post_ci,
+                                     lower_col = post_lowerbound,
+                                     upper_col = post_upperbound,
+                                     n_col = post_samplesize,
+                                     se_col = post_se,
+                                     sd_col = post_sd,
+                                     ci_level = 0.95)
+glimpse(post_ci_sd_se)
+
+##############################################
+# Left join baseline to results----
+##############################################
+glimpse(baseline)
+post_baseline <- post_ci_sd_se |> 
+  left_join(baseline, by = c('ARMID', 'Outcome'))
+glimpse(post_baseline) # 179 rows
+
+#########################################################################
+# Row bind the results of change from baseline and the post results----
+########################################################################
+# Select vital columns from updated change and post
+results_change_baseline <- results_change_baseline |> 
+  rename('ID' = 'ID.x', 'post_time_months' = 'change_time_months', 'post_samplesize' = 'change_samplesize') |> 
+  select('ID', 'ARMID','post_time_months', 'age', 'Outcome','treatment_group','female_pct', 'baseline_mean', 'baseline_lowerbound', 
+         'baseline_upperbound', 'baseline_sd', 'baseline_se', 'baseline_N_per_arm', 'last_name', 'publication_year',
+         'post_mean','post_lowerbound', 'post_upperbound', 'post_sd', 'post_se','post_samplesize')
+glimpse(results_change_baseline) # 108 X 21
+
+post_baseline <- post_baseline |> 
+  rename('ID' = 'ID.x') |> 
+  select(
+    'ID', 'ARMID', 'post_time_months', 'age', 'Outcome', 'treatment_group',
+    'female_pct', 'baseline_mean', 'baseline_lowerbound', 'baseline_upperbound',
+    'baseline_sd', 'baseline_se', 'baseline_N_per_arm', 'last_name',
+    'publication_year', 'post_mean', 'post_lowerbound', 'post_upperbound',
+    'post_sd', 'post_se', 'post_samplesize'
+  )
+glimpse(post_baseline) # 179 X 21
+
+# Row bind the change and post 
+rows_to_add <- results_change_baseline |> 
+  anti_join(
+    post_baseline,
+    by = c("ID", "Outcome", 'post_time_months', "ARMID" ) )
+
+all_post_results <- bind_rows(
+  post_baseline,
+  rows_to_add
+)
+
+# Final results ------
+glimpse(all_post_results) # 262 rows
+all_post_results$Outcome
+

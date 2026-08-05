@@ -190,10 +190,10 @@ create_results_values <- function(
       !!paste0(prefix, "_se") :=
         .data[[paste0(prefix, "_sd")]] /
           sqrt(!!sample_size),
-      !!paste0(prefix, "_lower") :=
+      !!paste0(prefix, "_lowerbound") :=
         .data[[paste0(prefix, "_mean")]] -
         1.96 * .data[[paste0(prefix, "_se")]],
-      !!paste0(prefix, "_upper") :=
+      !!paste0(prefix, "_upperbound") :=
         .data[[paste0(prefix, "_mean")]] +
         1.96 * .data[[paste0(prefix, "_se")]]
     )
