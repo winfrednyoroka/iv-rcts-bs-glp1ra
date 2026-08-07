@@ -46,8 +46,7 @@ baseline_post <- baseline_post |>
 glimpse(baseline_post)
 
 print(baseline_post$ARMID_new)
-print (baseline_post |> 
-  select((ncol(.)-4):ncol(.)), n=110)
+
 
 # Create a new labels (author, year and the treatment name)
 baseline_post <- baseline_post |> 
