@@ -55,5 +55,4 @@ compare_baseline <- function(
       df,
       p_value
     )
-  
 }
