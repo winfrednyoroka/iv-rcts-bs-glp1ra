@@ -6,6 +6,7 @@
 # Load loibraries and functions
 source('R/shared/setup.R')
 source('R/shared/calculate_fstatistic.R')
+source('R/shared/create_Fstatbubbleplot.R')
 
 # Read in the data
 base_post_combined <- readRDS('data/bs/processed/baseline_post_combinedmultiarms.rds')
@@ -25,47 +26,45 @@ bmi_fstat <- calc_fstat(df = bmi,
            sd_col = "sd",
            n_col = "samplesize")
 bmi_fstat
-###################################################
-# Save RDS object of the F-stat
-# Write a csv output in table folder
-####################################################
 
-# Visualise the F-stat
-fstatplot_size <- ggplot(
-  bmi_fstat,
-  aes(
-    x = StudyDuration,
-    y = StudyID,
-    size = f_stat
-  )
-) +
-  geom_point(
-    alpha = 0.5,
-    shape = 16
-  ) +
-  scale_size_continuous(
-    name = "F-statistic",
-    range = c(2, 12)
-  ) +
-  scale_x_continuous(
-    breaks = sort(unique(bmi_fstat$StudyDuration))
-  ) +
-  labs(
-    x = "Follow-up duration (months)",
-    y = "Author(Year)",
-    #title = "Instrument strength by study and follow-up duration"
-  ) +
-  theme_classic()
+################################
+# Visualise the F-statistics
+###############################
+# Create year column and order in desceding order
+bmi_fstat <- bmi_fstat %>%
+  mutate(
+    Year = as.integer(
+      stringr::str_extract(
+        StudyID,
+        "\\d{4}"
+      )
+    )
+  ) %>%
+  arrange(-Year)
 
-fstatplot_size
+bmi_fstat
+
+# Plot
+fstatplot_size <- plot_fstat(data = bmi_fstat,
+           study_col = "StudyID",
+           duration_col = "StudyDuration",
+           fstat_col = "f_stat",
+           xlab = "Follow-up duration (months)",
+           ylab = "")
 ############################
 # Save the plot
 ############################
 ggsave(
-  filename = "output/bs/figures/bmi_fstat_bubbleplot.jpeg",
+  filename = "output/bs/figures/datadrivenvis/bmi_fstat/bmi_fstat_bubbleplot.jpeg",
   plot = fstatplot_size,
   width = 12,      # inches
   height = 8,      # inches
   units = "in",
   dpi = 300
 )
+###################################################
+# Save RDS object of the F-stat
+# Write a csv output in table folder
+####################################################
+saveRDS(bmi_fstat, 'data/bs/processed/bmi_fstat.rds')
+write_csv(bmi_fstat, 'output/bs/tables/bmi_fstat.csv')
