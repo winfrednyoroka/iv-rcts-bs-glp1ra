@@ -30,43 +30,6 @@ baseline_post <- baseline_post |>
   )
 glimpse(baseline_post)
 
-# # Look up treatment groups and create ARMIDs
-# arm_lookup <- baseline_post |> 
-#   distinct(ID,author_year, arm_name, ARMID, treatment_group) |> 
-#   arrange(ID, treatment_group, ARMID) |> 
-#   group_by(ID, author_year, treatment_group) |> 
-#   mutate(
-#     ARMID_new = if (n() == 1) {
-#       arm_name
-#     } else {
-#       paste0(arm_name, "_", LETTERS[seq_len(n())])
-#     }
-#   ) |> 
-#   ungroup()
-# 
-# print(arm_lookup, n =51)
-# 
-# # Merge the labels to the data
-# baseline_post <- baseline_post |> 
-#   left_join(
-#     arm_lookup |> 
-#       select(ID, ARMID, ARMID_new),
-#     by = c("ID", "ARMID")
-#   )
-# glimpse(baseline_post)
-# 
-# print(baseline_post$ARMID_new)
-# 
-# 
-# # Create a new labels (author, year and the treatment name)
-# baseline_post <- baseline_post |> 
-#   mutate(
-#     study_arm_label = paste0(
-#       author_year, ' ',
-#       sub("^\\d+_", "", ARMID_new)
-#     )
-#   )
-# print(baseline_post$study_arm_label)
 
 ##########################################################
 # Create labels (A/B) for multi-arm studies ----
