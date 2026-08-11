@@ -52,12 +52,20 @@ output/glp1ra/*
 
 output/bs/figures/*
 !output/bs/figures/README.md
+!output/bs/figures/datadrivenvis/dbp_all_time_points/
+!output/bs/figures/datadrivenvis/dbp_12and24months/
+!output/bs/figures/datadrivenvis/sbp_all_time_points/
+!output/bs/figures/datadrivenvis/sbp_12and24months/
 
 output/bs/tables/*
 !output/bs/tables/README.md
 
 output/glp1ra/figures/*
 !output/glp1ra/figures/README.md
+!output/glp1ra/figures/datadrivenvis/dbp_all_time_points/
+!output/glp1ra/figures/datadrivenvis/dbp_6and12to24months/
+!output/glp1ra/figures/datadrivenvis/sbp_all_time_points/
+!output/glp1ra/figures/datadrivenvis/dbp_6and12to24months/
 
 output/glp1ra/tables/*
 !output/glp1ra/tables/README.md
