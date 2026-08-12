@@ -270,7 +270,7 @@ bmi_sbp_6_12_16_17_24_plot <- plot_bmi_bp_trajectory(data = bmi_sbp_6_12_16_17_2
                                   consistent_limits = FALSE,
                                   width = 8,
                                   height = 6,
-                                  facet_wrap_width = 40,
+                                  facet_wrap_width = 50,
                                   title_wrap_width = 100
                                   )
 bmi_sbp_6_12_16_17_24_plot
