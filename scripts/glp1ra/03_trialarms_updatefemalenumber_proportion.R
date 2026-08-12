@@ -2,7 +2,7 @@
 #### IV Analysis Applied to Bariatric Surgrey RCTs ######
 #########################################################
 ## The main aim of the study is:
-## What is the effect of BMI difference induced by bariatric surgery on BP using
+## What is the effect of BMI difference induced by GLP1RAs on BP using
 ## Using IV analysis framework
 ## Randomisation as an IV, instrumenting weight loss
 
