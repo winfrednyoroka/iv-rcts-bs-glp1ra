@@ -31,6 +31,7 @@ studysheet <- studysheet |>
 
 glimpse(studysheet)
 
+
 trialarms <- read_excel(file, sheet = 'Trialarms', skip = 1) # skips first row which is a header
 glimpse(trialarms)
 trialarms <- trialarms |> 
