@@ -240,6 +240,7 @@ bmi_sbp_6_12_16_17_24 <- bmi_sbp_plot |>
   filter(any(post_time_months %in% target_months)) |>
   filter(post_time_months %in% c(0, target_months)) |>
   ungroup()
+
 bmi_sbp_6_12_16_17_24
 #############################################
 # BMI-SBP plot 
