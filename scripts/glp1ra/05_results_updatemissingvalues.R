@@ -3,7 +3,7 @@
 # Firstly the script reads in the results from post (actual means) reported
 # post-intervention and the results based on change from baseline
 # Secondly uses imputestats function to update missing values in change from baseline
-# Thirdly, join change with baseline, and calculate the actual means
+# Thirdly, join change from baseline results with baseline, and calculate the actual means
 # Fourthly, update the CIs, SDs and SEs for the results (post- actual reported means)
 # Combine with the baseline to obtain the author name and year of publication
 # Finally combine the updated post with updated change and save as rds object
