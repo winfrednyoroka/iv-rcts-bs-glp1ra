@@ -322,3 +322,45 @@ ggsave(
   units = "in",
   dpi = 300
 )
+
+
+###########################################
+# Ellipse as confidence intervals ----
+##############Playground-----
+library(dplyr)
+library(ggplot2)
+library(ggforce)
+
+plot_dat <- bmi_dbp_plot %>%
+  mutate(
+    bmi_radius = (upperbound_BMI - lowerbound_BMI) / 2,
+    dbp_radius = (upperbound_DBP - lowerbound_DBP) / 2
+  )
+
+ggplot(
+  plot_dat,
+  aes(
+    x = mean_BMI,
+    y = mean_DBP,
+    colour = treatment_group,
+    group = interaction(comparison_id, arm_name)
+  )
+) +
+  geom_path(linewidth = 0.7, alpha = 0.7) +
+  geom_point(size = 2.5) +
+  geom_ellipse(
+    aes(
+      x0 = mean_BMI,
+      y0 = mean_DBP,
+      a = bmi_radius,
+      b = dbp_radius,
+      angle = 0
+    ),
+    
+    fill = NA,
+    linewidth = 0.2,
+    alpha = 0.1,
+    show.legend = FALSE
+  ) +
+  facet_wrap(~ comparison_id) +
+  theme_bw()
