@@ -41,6 +41,7 @@ study_trialarms_baseline_CIs_complete <- update_confidence_bounds(data = study_t
                                                                                      upper_bound_col = 'baseline_upperbound',z=1.96,digits = 2)
 glimpse(study_trialarms_baseline_CIs_complete)
 
+
 ###########################################
 # Fill in the SEs and SDs----
 ##########################################
@@ -49,7 +50,10 @@ study_trialarms_baseline_CIsSDsSEs_complete <- calc_sd_se_from_ci(data = study_t
                                           n_col = baseline_N_per_arm, ci_level = .95, se_col = baseline_se, sd_col = baseline_sd)
 glimpse(study_trialarms_baseline_CIsSDsSEs_complete)
 
+study_trialarms_baseline_CIsSDsSEs_complete |> 
+  filter(is.na(age))
+
 #####################################################################################
 # Save the output into a clean rds file in processed folder ----
 #####################################################################################
-saveRDS(study_trialarms_baseline_CIsSDsSEs_complete, file = 'data/bs/processed/Study_trialarms_baseline_CIsSDsSEs_updated.rds')
+saveRDS(study_trialarms_baseline_CIsSDsSEs_complete, file = 'data/glp1ra/processed/Study_trialarms_baseline_CIsSDsSEs_updated.rds')
