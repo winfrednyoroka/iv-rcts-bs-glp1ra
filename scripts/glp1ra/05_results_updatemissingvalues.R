@@ -22,6 +22,7 @@ source("R/shared/update_results_fromchangeandbaseline.R")
 ###################################################
 baseline <- readRDS("data/glp1ra/processed/Study_trialarms_baseline_CIsSDsSEs_updated.rds")
 glimpse(baseline)
+
 change <- readRDS("data/glp1ra/processed/change.rds")
 glimpse(change)
 post <- readRDS("data/glp1ra/processed/post.rds")
@@ -85,15 +86,15 @@ post_ci_sd_se <- calc_sd_se_from_ci( data = post_ci,
                                      se_col = post_se,
                                      sd_col = post_sd,
                                      ci_level = 0.95)
-glimpse(post_ci_sd_se)
+glimpse(post_ci_sd_se) # 56 rows
 
 ##############################################
 # Left join baseline to results----
 ##############################################
-glimpse(baseline)
+glimpse(baseline) # 337 rows
 post_baseline <- post_ci_sd_se |> 
   left_join(baseline, by = c('ARMID', 'Outcome'))
-glimpse(post_baseline) # 377 rows
+glimpse(post_baseline) # 56 rows
 
 #########################################################################
 # Row bind the results of change from baseline and the post results----
