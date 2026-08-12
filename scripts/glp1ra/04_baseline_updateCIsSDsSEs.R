@@ -15,23 +15,21 @@ source('R/shared/update_missing_SDs_SEs.R')
 # Read in the data ----
 #######################
 # Read the baseline data (BMI, SBP,DBP,HTN)
-baseline <- readRDS('data/bs/processed/baseline.rds')
+baseline <- readRDS('data/glp1ra/processed/baseline.rds')
 glimpse(baseline)
 
 # Read the studysheet_trialarms_updated.rds from processed folder to extract the sample size
-study_trialarms <- readRDS('data/bs/processed/studysheet_trialarms_updated.rds')
+study_trialarms <- readRDS('data/glp1ra/processed/studysheet_trialarms_updated.rds')
 glimpse(study_trialarms)
-
 
 ######################################################################
 # Left join, Baseline(master) with studysheet_trialarms by ARMID ----
 #####################################################################
 study_trialarms_baseline <- baseline |> 
   left_join(study_trialarms |> 
-              select('ARMID','treatment_group','baseline_N_per_arm','age','treatment_arm_fullname',
-                     'last_name','publication_year','female_count','female_pct'), by ='ARMID')
+              select('ARMID','treatment_group','baseline_N_per_arm','age','treatment_arm_nameinitials',
+                     'last_name','publication_year','female_count','female_pct'), by ='ARMID', relationship = "many-to-many")
 glimpse(study_trialarms_baseline)
-
 
 ###########################################################################
 # Fill in confidence intervals for study_trialarms_baseline ----
