@@ -50,8 +50,6 @@ study_trialarms_baseline_CIsSDsSEs_complete <- calc_sd_se_from_ci(data = study_t
                                           n_col = baseline_N_per_arm, ci_level = .95, se_col = baseline_se, sd_col = baseline_sd)
 glimpse(study_trialarms_baseline_CIsSDsSEs_complete)
 
-study_trialarms_baseline_CIsSDsSEs_complete |> 
-  filter(is.na(age))
 
 #####################################################################################
 # Save the output into a clean rds file in processed folder ----
