@@ -1,8 +1,8 @@
 #########################################################
-#### IV Analysis Applied to Bariatric Surgrey RCTs ######
+#### IV Analysis Applied to GLP1RAs RCTs ######
 #########################################################
 ## The main aim of the study is:
-## What is the effect of BMI difference induced by bariatric surgery on BP using
+## What is the effect of BMI difference induced by GLP1RAs on BP using
 ## Using IV analysis framework
 ## Randomisation as an IV, instrumenting weight loss
 
@@ -23,7 +23,7 @@ source('R/shared/update_female_number_percentage.R')
 ###############
 # Read in Studysheet - extract author name and publication year
 studysheet <- readRDS('data/glp1ra/processed/studysheet.rds')
-glimpse(studysheet)
+glimpse(studysheet) # 33 rows
 
 # Read the TrialArms sheet
 trialarms <- readRDS('data/glp1ra/processed/trialarms.rds')

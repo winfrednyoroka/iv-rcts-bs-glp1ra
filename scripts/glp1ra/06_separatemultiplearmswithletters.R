@@ -13,13 +13,15 @@ source("R/shared/setup.R")
 ####################################################
 # Read in the data ----
 ###################################################
-baseline_post <- readRDS('data/bs/processed/post_results_updated.rds')
+baseline_post <- readRDS('data/glp1ra/processed/post_results_updated.rds')
 glimpse(baseline_post)
-
+unique(baseline_post$ID)
+print(baseline_post, n=15)#####
 # Create a author_year column
 baseline_post$author_year <- paste0(baseline_post$last_name," (", baseline_post$publication_year, ")")
 glimpse(baseline_post)
-unique(baseline_post$Outcome)
+unique(baseline_post$author_year)
+
 
 # Make short readable treatment arm names
 baseline_post <- baseline_post |> 
@@ -256,4 +258,4 @@ glimpse(plot_data)
 # Euclidean distance
 # T-test 4 hypothesis testing
 ############################################################
-saveRDS(plot_data, file = 'data/bs/processed/baseline_post_relabelmultiarms.rds')
+saveRDS(plot_data, file = 'data/glp1ra/processed/baseline_post_relabelmultiarms.rds')
