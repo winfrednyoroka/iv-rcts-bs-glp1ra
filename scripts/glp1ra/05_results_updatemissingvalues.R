@@ -21,12 +21,13 @@ source("R/shared/update_results_fromchangeandbaseline.R")
 # Read in the data ----
 ###################################################
 baseline <- readRDS("data/glp1ra/processed/Study_trialarms_baseline_CIsSDsSEs_updated.rds")
-glimpse(baseline)
+glimpse(baseline) # 337 rows
 
 change <- readRDS("data/glp1ra/processed/change.rds")
-glimpse(change)
+glimpse(change) # 358 rows
+
 post <- readRDS("data/glp1ra/processed/post.rds")
-glimpse(post)
+glimpse(post) # 56 rows
 
 ##############################################################
 # Update and impute missing change from baseline values----
@@ -36,23 +37,28 @@ change_updated <- impute_change_stats(
   data = change, mean_col = "change_mean", lower_col = "change_lowerbound", upper_col = "change_upperbound", sd_col = "change_sd",
   se_col = "change_se", n_col = "change_samplesize", ci_level_col = "change_CI_level", default_ci = 95
 )
-glimpse(change_updated)
+glimpse(change_updated) # 358 rows
 
 ##############################################################
 # Join baseline and change_updated ----
 # Calculate the results form baseline and change_updated
 # use update_results_fromchangeandbaseline function
 #############################################################
-change_baseline <- change_updated |>
-  left_join(baseline, by = c("ARMID", "Outcome"))
-glimpse(change_baseline)
+base_change <- left_join(baseline,change_updated, by = c("ARMID", "Outcome"),relationship = "many-to-many")
+glimpse(base_change)
+base_change |> 
+  filter(ID.x == 14) |> 
+  select(last_name, Outcome,change_time_months, change_mean)
+
 results_change_baseline <- create_results_values(
-  data = change_baseline, baseline_mean = baseline_mean, baseline_sd = baseline_sd,
+  data = base_change, baseline_mean = baseline_mean, baseline_sd = baseline_sd,
   mean_change = change_mean, sd_change = change_sd, sample_size = change_samplesize,
   r = .7, prefix = "post"
 )
 glimpse(results_change_baseline)
-
+results_change_baseline |> 
+  filter(ID.x == 7) |> 
+  select(last_name, Outcome,change_time_months, change_mean)
 ##############################################################
 # Update results; post intervention mean values----
 # Use update CI and calc sd and se functions
@@ -96,6 +102,10 @@ post_baseline <- post_ci_sd_se |>
   left_join(baseline, by = c('ARMID', 'Outcome'))
 glimpse(post_baseline) # 56 rows
 
+post_baseline |> 
+  filter(ID.x == 33) |> 
+  select(last_name, Outcome)
+
 #########################################################################
 # Row bind the results of change from baseline and the post results----
 ########################################################################
@@ -107,6 +117,7 @@ results_change_baseline <- results_change_baseline |>
          'post_mean','post_lowerbound', 'post_upperbound', 'post_sd', 'post_se','post_samplesize')
 glimpse(results_change_baseline) # 523 X 21
 
+
 post_baseline <- post_baseline |> 
   rename('ID' = 'ID.x') |> 
   select(
@@ -116,7 +127,7 @@ post_baseline <- post_baseline |>
     'publication_year', 'post_mean', 'post_lowerbound', 'post_upperbound',
     'post_sd', 'post_se', 'post_samplesize'
   )
-glimpse(post_baseline) # 56 X 21
+glimpse(post_baseline) # 340 X 21
 
 # Row bind the change and post 
 rows_to_add <- results_change_baseline |> 
@@ -129,9 +140,14 @@ all_post_results <- bind_rows(
   rows_to_add
 )
 
+
+# Drop any row where the last_name is NA - no baseline BP
+all_post_results <- all_post_results |> 
+  filter(!is.na(last_name))
 # Final results ------
-glimpse(all_post_results) # 535 rows
+glimpse(all_post_results) # 498 rows
 all_post_results$Outcome
+
 
 ###############################################################
 #  Save all updated results to be used by the next script----
