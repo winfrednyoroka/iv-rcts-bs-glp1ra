@@ -163,13 +163,30 @@ plot_bmi_bp_trajectory <- function(
     output_dir = "figures",
     consistent_limits = TRUE,
     width = 8,
-    height = 6
+    height = 6,
+    facet_wrap_width = 25,
+    title_wrap_width = 60
 ) {
   
   facet_var  <- enquo(facet_var)
   group_var  <- enquo(group_var)
   colour_var <- enquo(colour_var)
   shape_var  <- enquo(shape_var)
+  
+  ########################################################
+  # Create wrapped facet labels
+  ########################################################
+  
+  facet_name <- rlang::as_name(facet_var)
+  
+  data <- data |>
+    dplyr::mutate(
+      facet_label = stringr::str_wrap(
+        as.character(.data[[facet_name]]),
+        width = facet_wrap_width
+      )
+    )
+  
   
   ########################################################
   # Create a GLOBAL shape map from the full dataset
@@ -284,7 +301,7 @@ plot_bmi_bp_trajectory <- function(
     ) +
     
     facet_wrap(
-      vars(!!facet_var),
+      vars(facet_label),
       scales = scales
     ) +
     
@@ -304,9 +321,16 @@ plot_bmi_bp_trajectory <- function(
     
     theme(
       legend.position = "bottom",
+      
+      strip.background = element_rect(
+        fill = "grey95",
+        colour = "grey70"
+      ),
+      
       strip.text = element_text(
-        size = 7,
-        lineheight = 0.8
+        size = 8,
+        face = "plain",
+        lineheight = 1
       )
     )
   
@@ -336,8 +360,13 @@ plot_bmi_bp_trajectory <- function(
     
     for (i in comparisons) {
       
+      plot_title <- stringr::str_wrap(
+        as.character(i),
+        width = title_wrap_width
+      )
+      
       tmp <- data |>
-        filter((!!facet_var) == i)
+        dplyr::filter((!!facet_var) == i)
       
       pp <- ggplot(
         tmp,
@@ -363,11 +392,7 @@ plot_bmi_bp_trajectory <- function(
         
         geom_path(
           linewidth = 0.8,
-          alpha = 0.8,
-          arrow = arrow(
-            length = unit(0.08, "cm"),
-            type = "closed"
-          )
+          alpha = 0.8
         ) +
         
         geom_errorbar(
@@ -399,6 +424,7 @@ plot_bmi_bp_trajectory <- function(
         ) +
         
         labs(
+          title = plot_title,
           x = x_label,
           y = y_label,
           colour = NULL,
@@ -406,8 +432,16 @@ plot_bmi_bp_trajectory <- function(
         ) +
         
         theme_bw() +
+        
         theme(
-          legend.position = "bottom"
+          legend.position = "bottom",
+          
+          plot.title = element_text(
+            size = 8,
+            face = "plain",
+            hjust = 0.5,
+            margin = margin(b = 10)
+          )
         )
       
       if (consistent_limits) {
