@@ -157,7 +157,7 @@ bmi_sbp <- plot_bmi_bp_trajectory(data = bmi_sbp_plot,
                        group_var = arm_name,
                        colour_var = treatment_group,
                        shape_var = month_f,
-                       point_size = 3,
+                       point_size = 1.5,
                        bmi_ref = 25,
                        bp_ref = 120,
                        scales = "fixed",
@@ -169,7 +169,10 @@ bmi_sbp <- plot_bmi_bp_trajectory(data = bmi_sbp_plot,
                        output_dir = "output/bs/figures/datadrivenvis/sbp_all_time_points/",
                        consistent_limits = FALSE,
                        width = 8,
-                       height = 6)
+                       height = 6,
+                       facet_wrap_width = 20,
+                       title_wrap_width = 100)
+bmi_sbp
 ###########################
 # Save the plot-------
 ###########################
@@ -209,7 +212,9 @@ bmi_dbp <- plot_bmi_bp_trajectory(data = bmi_dbp_plot,
                        output_dir = "output/bs/figures/datadrivenvis/dbp_all_time_points/",
                        consistent_limits = FALSE,
                        width = 8,
-                       height = 6)
+                       height = 6,
+                       facet_wrap_width = 20,
+                       title_wrap_width = 100)
 ###########################
 # Save the plot-------
 ###########################
@@ -226,9 +231,16 @@ ggsave(
 ##############################################################################
 # Plot BMI-SBP at baseline, 12 and 24 months only-----
 ##############################################################################
-bmi_sbp_12_24 <- bmi_sbp_plot |> 
-  filter(post_time_months == 0 | post_time_months == 12 | post_time_months ==24)
+target_months <- c(12,24)
 
+bmi_sbp_12_24 <- bmi_sbp_plot |>
+  group_by(comparison_id, arm_name) |>
+  filter(any(post_time_months %in% target_months)) |>
+  filter(post_time_months %in% c(0, target_months)) |>
+  ungroup()
+#bmi_sbp_12_24 <- bmi_sbp_plot |> 
+  #filter(post_time_months == 0 | post_time_months == 12 | post_time_months ==24)
+bmi_sbp_12_24
 #############################################
 # BMI-SBP plot 
 # All time points individual plots
@@ -244,7 +256,7 @@ bmi_sbp_12_24_plot <- plot_bmi_bp_trajectory(data = bmi_sbp_12_24,
                                   group_var = arm_name,
                                   colour_var = treatment_group,
                                   shape_var = month_f,
-                                  point_size = 3,
+                                  point_size = 1.5,
                                   bmi_ref = 25,
                                   bp_ref = 120,
                                   scales = "fixed",
@@ -256,7 +268,9 @@ bmi_sbp_12_24_plot <- plot_bmi_bp_trajectory(data = bmi_sbp_12_24,
                                   output_dir = "output/bs/figures/datadrivenvis/sbp_12and24months/",
                                   consistent_limits = FALSE,
                                   width = 8,
-                                  height = 6)
+                                  height = 6,
+                                  facet_wrap_width = 20,
+                                  title_wrap_width = 100)
 ###########################
 # Save the plot-------
 ###########################
@@ -284,7 +298,7 @@ bmi_dbp_12_24 <- bmi_dbp_plot |>
   filter(post_time_months %in% c(0, 12, 24))
 
 #############################################
-# BMI-SBP plot 
+# BMI-DBP plot 
 # All time points individual plots
 #############################################
 bmi_dbp_12_24_plot <- plot_bmi_bp_trajectory(data = bmi_dbp_12_24,
@@ -310,7 +324,9 @@ bmi_dbp_12_24_plot <- plot_bmi_bp_trajectory(data = bmi_dbp_12_24,
                                              output_dir = "output/bs/figures/datadrivenvis/dbp_12and24months/",
                                              consistent_limits = FALSE,
                                              width = 8,
-                                             height = 6)
+                                             height = 6,
+                                             facet_wrap_width = 20,
+                                             title_wrap_width = 100)
 ###########################
 # Save the plot-------
 ###########################
@@ -322,45 +338,3 @@ ggsave(
   units = "in",
   dpi = 300
 )
-
-
-###########################################
-# Ellipse as confidence intervals ----
-##############Playground-----
-library(dplyr)
-library(ggplot2)
-library(ggforce)
-
-plot_dat <- bmi_dbp_plot %>%
-  mutate(
-    bmi_radius = (upperbound_BMI - lowerbound_BMI) / 2,
-    dbp_radius = (upperbound_DBP - lowerbound_DBP) / 2
-  )
-
-ggplot(
-  plot_dat,
-  aes(
-    x = mean_BMI,
-    y = mean_DBP,
-    colour = treatment_group,
-    group = interaction(comparison_id, arm_name)
-  )
-) +
-  geom_path(linewidth = 0.7, alpha = 0.7) +
-  geom_point(size = 2.5) +
-  geom_ellipse(
-    aes(
-      x0 = mean_BMI,
-      y0 = mean_DBP,
-      a = bmi_radius,
-      b = dbp_radius,
-      angle = 0
-    ),
-    
-    fill = NA,
-    linewidth = 0.2,
-    alpha = 0.1,
-    show.legend = FALSE
-  ) +
-  facet_wrap(~ comparison_id) +
-  theme_bw()
