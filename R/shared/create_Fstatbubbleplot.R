@@ -32,7 +32,7 @@ plot_fstat <- function(
     )
   ) +
     geom_point(
-      alpha = 0.5,
+      alpha = .5,
       shape = 16
     ) +
     scale_size_continuous(
