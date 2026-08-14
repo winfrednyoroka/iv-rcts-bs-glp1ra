@@ -3,7 +3,7 @@
 # assumption.
 # Calculate F-stat of BMI-difference post-intervention
 ################################################################################
-# Load loibraries and functions
+# Load libraries and functions
 source('R/shared/setup.R')
 source('R/glp1ra/calculate_fstatisticglp1ra.R')
 source('R/shared/create_Fstatbubbleplot.R')
