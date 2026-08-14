@@ -7,6 +7,7 @@
 source('R/shared/setup.R')
 source('R/shared/calculate_fstatistic.R')
 source('R/shared/create_Fstatbubbleplot.R')
+source('R/shared/plot_fstat.R')
 
 # Read in the data
 base_post_combined <- readRDS('data/bs/processed/baseline_post_combinedmultiarms.rds')
@@ -68,3 +69,33 @@ ggsave(
 ####################################################
 saveRDS(bmi_fstat, 'data/bs/processed/bmi_fstat.rds')
 write_csv(bmi_fstat, 'output/bs/tables/bmi_fstat.csv')
+
+
+###############################
+# A colored F-stat bubble plot
+###############################
+bs_fstatplot <- plot_fstat_colored(data = bmi_fstat,
+           
+           study_col = "StudyID",
+           
+           duration_col = "StudyDuration",
+           
+           fstat_col = "f_stat",
+           
+           f_threshold = 10,
+           
+           xlab = "Follow-up duration (months)",
+           
+           ylab = "")
+bs_fstatplot
+############################
+# Save the plot
+############################
+ggsave(
+  filename = "output/bs/figures/datadrivenvis/bmi_fstat/bmi_fstat_bubbleplotcolored.jpeg",
+  plot = bs_fstatplot,
+  width = 12,      # inches
+  height = 8,      # inches
+  units = "in",
+  dpi = 300
+)
