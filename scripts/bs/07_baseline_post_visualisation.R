@@ -157,7 +157,7 @@ bmi_sbp <- plot_bmi_bp_trajectory(data = bmi_sbp_plot,
                        group_var = arm_name,
                        colour_var = treatment_group,
                        shape_var = month_f,
-                       point_size = 1.5,
+                       point_size = 3,
                        bmi_ref = 25,
                        bp_ref = 120,
                        scales = "fixed",
@@ -238,8 +238,6 @@ bmi_sbp_12_24 <- bmi_sbp_plot |>
   filter(any(post_time_months %in% target_months)) |>
   filter(post_time_months %in% c(0, target_months)) |>
   ungroup()
-#bmi_sbp_12_24 <- bmi_sbp_plot |> 
-  #filter(post_time_months == 0 | post_time_months == 12 | post_time_months ==24)
 bmi_sbp_12_24
 #############################################
 # BMI-SBP plot 
@@ -256,7 +254,7 @@ bmi_sbp_12_24_plot <- plot_bmi_bp_trajectory(data = bmi_sbp_12_24,
                                   group_var = arm_name,
                                   colour_var = treatment_group,
                                   shape_var = month_f,
-                                  point_size = 1.5,
+                                  point_size = 3,
                                   bmi_ref = 25,
                                   bp_ref = 120,
                                   scales = "fixed",
@@ -286,8 +284,6 @@ ggsave(
 ##############################################################################
 # Plot BMI-DBP at baseline, 12 and 24 months only-----
 ##############################################################################
-bmi_dbp_12_24 <- bmi_dbp_plot |> 
-  filter(post_time_months == 0 | post_time_months == 12 | post_time_months ==24)
 
 bmi_dbp_12_24 <- bmi_dbp_plot |>
   group_by(author_year) |>
@@ -296,7 +292,7 @@ bmi_dbp_12_24 <- bmi_dbp_plot |>
   ) |>
   ungroup() |>
   filter(post_time_months %in% c(0, 12, 24))
-
+bmi_dbp_12_24
 #############################################
 # BMI-DBP plot 
 # All time points individual plots
@@ -312,7 +308,7 @@ bmi_dbp_12_24_plot <- plot_bmi_bp_trajectory(data = bmi_dbp_12_24,
                                              group_var = arm_name,
                                              colour_var = treatment_group,
                                              shape_var = month_f,
-                                             point_size = 2,
+                                             point_size = 3,
                                              bmi_ref = 25,
                                              bp_ref = 80,
                                              scales = "fixed",
