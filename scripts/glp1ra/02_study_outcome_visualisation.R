@@ -88,12 +88,13 @@ long <- long |>
     Month_plot = case_when(
       Month <= 24 ~ Month,            # preserve early dense follow-up
       Month > 24 & Month <= 65 ~ 
-        24 + (Month - 24) * 0.4,       # compress 24-65 months
+        24 + (Month - 24) * 0.8,       # compress 24-65 months
       TRUE ~ Month
     )
   )
   
 glimpse(long)
+unique(long$Month)
 
 #####################################################
 # Visualise outcome-time points map----
@@ -101,7 +102,7 @@ glimpse(long)
 
 glp1ra_studyoutcomecoverage_plot = plot_study_outcome_coverage( data =long,
                                               study_order = NULL,outcomes = c("BMI", "SBP", "DBP"),
-                                              breaks = c(3, 4, 6, 7, 8, 9, 10, 11, 12, 16, 17, 24, 29.2, 40.4,70),
+                                              breaks = c(3, 4, 6, 7, 8, 9, 10, 11, 12, 16, 17, 24, 34.4, 56,65),
                                               labels = c(
                                                 "3", "4", "6", "7", "8", "9",
                                                 "10", "11", "12", "16", "17", 
