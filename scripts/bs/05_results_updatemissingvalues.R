@@ -36,7 +36,6 @@ change_updated <- impute_change_stats(
   se_col = "change_se", n_col = "change_samplesize", ci_level_col = "change_CI_level", default_ci = 95
 )
 glimpse(change_updated)
-
 ##############################################################
 # Join baseline and change_updated ----
 # Calculate the results form baseline and change_updated
@@ -51,7 +50,6 @@ results_change_baseline <- create_results_values(
   r = .7, prefix = "post"
 )
 glimpse(results_change_baseline)
-
 ##############################################################
 # Update results; post intervention mean values----
 # Use update CI and calc sd and se functions
@@ -131,7 +129,6 @@ all_post_results <- bind_rows(
 # Final results ------
 glimpse(all_post_results) # 262 rows
 all_post_results$Outcome
-
 ###############################################################
 #  Save all updated results to be used by the next script----
 ##############################################################
