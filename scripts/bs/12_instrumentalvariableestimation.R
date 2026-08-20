@@ -16,16 +16,17 @@ post <- base_post_combined |>
   filter(post_time_months != 0) # remove all baseline measures
 glimpse(post)
 # Create treatment effects first
-effects <- post |> 
+effects <- post |>
   select(
     study_id,
     Outcome,
     post_time_months,
     treatment_group,
+    arm_name,
     mean,
     sd,
     samplesize
-  ) |> 
+  ) |>
   pivot_wider(
     id_cols = c(
       study_id,
@@ -34,28 +35,32 @@ effects <- post |>
     ),
     names_from = treatment_group,
     values_from = c(
+      arm_name,
       mean,
       sd,
       samplesize
     )
-  ) |> 
+  ) |>
   mutate(
     beta = mean_Intervention - mean_Control,
-    
     se = sqrt(
       (sd_Intervention^2 / samplesize_Intervention) +
         (sd_Control^2 / samplesize_Control)
     )
-  ) |> 
+  ) |>
   select(
     study_id,
     Outcome,
     post_time_months,
+    arm_name_Intervention,
+    arm_name_Control,
+    samplesize_Intervention,
+    samplesize_Control,
     beta,
     se
   )
 glimpse(effects)
-
+head(effects, n=15)
 #################################################################
 # IV estimate BMI at 12 months and BP (SBP,DBP) at 24 months
 ################################################################
@@ -80,7 +85,10 @@ wr_bmi12_sbp24_clean <- wr_bmi12_sbp24 |>
     !is.na(WR_SE)
   )
 wr_bmi12_sbp24_clean
-
+# Drop Ikramuddin 2015 - its the same trial as Ikramuddin 2018
+wr_bmi12_sbp24_clean <- wr_bmi12_sbp24_clean |> 
+  filter(study_id != 'Ikramuddin (2015)')
+wr_bmi12_sbp24_clean
 # Save rds object and csv----
 saveRDS(wr_bmi12_sbp24_clean, 'data/bs/processed/wr_bmi12_sbp24.rds')
 write_csv(wr_bmi12_sbp24_clean, 'output/bs/tables/wr_bmi12_sbp24.csv')
@@ -105,6 +113,10 @@ wr_bmi12_dbp24_clean <- wr_bmi12_dbp24 |>
     !is.na(WR),
     !is.na(WR_SE)
   )
+wr_bmi12_dbp24_clean
+# Drop Ikramuddin 2015 - its the same trial as Ikramuddin 2018
+wr_bmi12_dbp24_clean <- wr_bmi12_dbp24_clean |> 
+  filter(study_id != 'Ikramuddin (2015)')
 wr_bmi12_dbp24_clean
 
 # Save rds object and csv----
@@ -132,7 +144,10 @@ wr_bmi12_sbp12_clean <- wr_bmi12_sbp12 |>
     !is.na(WR_SE)
   )
 wr_bmi12_sbp12_clean
-
+# Drop Ikramuddin 2013 and 2015 and retain 2018 only
+wr_bmi12_sbp12_clean <- wr_bmi12_sbp12_clean |> 
+  filter(study_id != "Ikramuddin (2013)" & study_id!= "Ikramuddin (2015)")
+wr_bmi12_sbp12_clean      
 # Save rds object and csv----
 saveRDS(wr_bmi12_sbp12_clean, 'data/bs/processed/wr_bmi12_sbp12.rds')
 write_csv(wr_bmi12_sbp12_clean, 'output/bs/tables/wr_bmi12_sbp12.csv')
@@ -159,6 +174,10 @@ wr_bmi12_dbp12_clean <- wr_bmi12_dbp12 |>
   )
 wr_bmi12_dbp12_clean
 
+# Drop Ikramuddin 2013 and 2015 and Schauer 2012
+wr_bmi12_dbp12_clean <- wr_bmi12_dbp12_clean |> 
+  filter(study_id != "Ikramuddin (2013)" & study_id != "Ikramuddin (2015)" & study_id != "Schauer (2012)" )
+wr_bmi12_dbp12_clean
 # Save rds object and csv----
 saveRDS(wr_bmi12_dbp12_clean, 'data/bs/processed/wr_bmi12_dbp12.rds')
 write_csv(wr_bmi12_dbp12_clean, 'output/bs/tables/wr_bmi12_dbp12.csv')
@@ -183,7 +202,10 @@ wr_bmi24_sbp24_clean <- wr_bmi24_sbp24 |>
     !is.na(WR_SE)
   )
 wr_bmi24_sbp24_clean
-
+# Drop Ikramuddin 2015
+wr_bmi24_sbp24_clean <- wr_bmi24_sbp24_clean |> 
+  filter(study_id != "Ikramuddin (2015)")
+wr_bmi24_sbp24_clean
 # Save rds object and csv----
 saveRDS(wr_bmi24_sbp24_clean, 'data/bs/processed/wr_bmi24_sbp24.rds')
 write_csv(wr_bmi24_sbp24_clean, 'output/bs/tables/wr_bmi24_sbp24.csv')
@@ -208,7 +230,10 @@ wr_bmi24_dbp24_clean <- wr_bmi24_dbp24 |>
     !is.na(WR_SE)
   )
 wr_bmi24_dbp24_clean
-
+# Drop Ikramuddin 2015
+wr_bmi24_dbp24_clean <- wr_bmi24_dbp24_clean |> 
+  filter(study_id != "Ikramuddin (2015)")
+wr_bmi24_dbp24_clean
 # Save rds object and csv----
 saveRDS(wr_bmi24_dbp24_clean, 'data/bs/processed/wr_bmi24_dbp24.rds')
 write_csv(wr_bmi24_dbp24_clean, 'output/bs/tables/wr_bmi24_dbp24.csv')
