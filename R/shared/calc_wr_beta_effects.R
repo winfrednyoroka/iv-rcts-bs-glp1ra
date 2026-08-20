@@ -14,9 +14,7 @@ calc_wr <- function(data,
     pivot_wider(
       id_cols = c(study_id,
                   arm_name_Intervention,
-                  arm_name_Control,
-                  samplesize_Intervention,
-                  samplesize_Control),
+                  arm_name_Control),
       names_from = c(Outcome, post_time_months),
       values_from = c(beta, se)
     )
