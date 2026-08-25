@@ -34,6 +34,9 @@ glimpse(studysheet)
 
 trialarms <- read_excel(file, sheet = 'Trialarms', skip = 1) # skips first row which is a header
 glimpse(trialarms)
+# Remove the trailing underscore in control arm
+trialarms$ARMID <- sub("Control_$", "Control", trialarms$ARMID)
+glimpse(trialarms)
 trialarms <- trialarms |> 
   rename('baseline_N_per_arm' = 'SampleSize of treatment/comparator',
          'age' = 'Age of the participants per trial arm',
@@ -52,6 +55,10 @@ glimpse(trialarms)
 
 baseline <- read_excel(file, sheet = 'Baselinesheet', skip = 1) # skips first row which is a header
 glimpse(baseline)
+baseline
+# Remove the trailing underscore in control arm
+baseline$ArmID <- sub("Control_$", "Control", baseline$ArmID)
+glimpse(baseline)
 baseline <- baseline |> 
   rename('baseline_mean' = 'Mean',
          'baseline_lowerbound' = 'lower_CI',
@@ -66,30 +73,33 @@ baseline <- baseline |>
          'Notes_estimatororsubgroup' = 'Notes fo any estimate or group',
          'ARMID' = 'ArmID'
   )
-glimpse(baseline) # 327
-
+glimpse(baseline) # 321
+baseline
 ######################################################################################################
 # Clean up the baseline of non-continuous data----
 # Drop rows with hypertension as outcome, baseline_mean=NA, Note column has 24 h ambulatory BP
 #####################################################################################################
 # Filter out Rows with Hypertension (n = 24) as outcome (filter or filter_out)----
-baseline <- filter(baseline,Outcome != 'Hypertension')
-glimpse(baseline) # 291 rows
+baseline <- filter(baseline, Outcome!= 'Hypertension')
+glimpse(baseline) # 285 rows
 # Filter out the mean_baseline is NA (n =4) (the authors reported, SDs and SEs only)
 baseline <- filter(baseline,!is.na(baseline_mean))
-glimpse(baseline) # 291 rows
+glimpse(baseline) # 285 rows
 # Filter out the Note column for string if entry starts with 24-h ambulatory (n = 8)
 baseline <- filter(baseline,!grepl('24-h', Notes_estimatororsubgroup))  # 291 rows
-glimpse(baseline) # 291 rows
+glimpse(baseline) # 285 rows
 # Filter out the Note column for string if entry starts with median (n=3)
 baseline <- filter(baseline, !grepl('Median', Notes_estimatororsubgroup)) # N = 291
-glimpse(baseline) # 291 rows
+glimpse(baseline) # 285 rows
 # Filter out the Note column for string if entry starts with interquartle range (n=3)
 baseline <- filter(baseline, !grepl('interquartile', Notes_estimatororsubgroup)) # N = 291
-glimpse(baseline) # 291 rows
+glimpse(baseline) # 285 rows
 
 # Results (actual means and change form baseline)
 post <- read_excel(file, sheet = 'Resultssheet', skip = 1) # skips first row which is a header
+glimpse(post)
+# Remove the trailing underscore in control arm
+post$ArmID <- sub("Control_$", "Control", post$ArmID)
 glimpse(post)
 # Rename some columns
 post <- post |> 
@@ -125,6 +135,9 @@ glimpse(post)
 
 # Results - change from baseline
 change <- read_excel(file, sheet = 'ResultsChangefromBaseline', skip = 1) # skips first row which is a header
+glimpse(change)
+# Remove the trailing underscore in control arm
+change$ArmID <- sub("Control_$", "Control", change$ArmID)
 glimpse(change)
 # Rename some columns
 change <- change |> 
