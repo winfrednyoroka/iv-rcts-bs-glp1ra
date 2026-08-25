@@ -454,28 +454,44 @@ dbp_bmi <- dbp_bmi |>
     is.finite(WR_exact),
     is.finite(WR_SE_exact)
   )
-
+sbp_bmi
+dbp_bmi
 ##############################
 # metagen- meta-analysis
 # sbp_bmi-----
 sbp_bmi$study_label <- paste(
   sbp_bmi$study_id,
   ":",
-  sbp_bmi$treat1,
+  gsub("_$", "", gsub("_Control", "", gsub("_Intervention_", "_", sbp_bmi$treat1))),
   "vs",
-  sbp_bmi$treat2
+  gsub("_$", "", gsub("_Control", "", gsub("_Intervention_", "_", sbp_bmi$treat2)))
 )
+sbp_bmi
+
+###### 3-6 months and 12 to 24 months
 sbp_bmi$time_group <- dplyr::case_when(
   sbp_bmi$months <= 6~ "≤6 months",
   sbp_bmi$months >= 12 & sbp_bmi$months <= 24 ~ "12-24 months",
   TRUE ~ "Other"
 )
+########## 6 months only
+sbp_bmi_6m <- sbp_bmi |>
+dplyr::filter(months == 6)
+sbp_bmi_6m
 
+# Calculate the WRs
 m_6_unadj <- metagen(
   TE = WR_unadj,
   studlab = study_label,
   seTE = WR_SE_unadj,
   data = subset(sbp_bmi, time_group == "≤6 months")
+)
+
+m_6monly_unadj <- metagen(
+  TE = WR_unadj,
+  studlab = study_label,
+  seTE = WR_SE_unadj,
+  data = sbp_bmi_6m
 )
 
 m_12_24_unadj <- metagen(
@@ -492,6 +508,13 @@ m_6_exact <- metagen(
   data = subset(sbp_bmi, time_group == "≤6 months")
 )
 
+m_6monly_exact <- metagen(
+  TE = WR_exact,
+  studlab = study_label,
+  seTE = WR_SE_exact,
+  data = sbp_bmi_6m
+)
+
 m_12_24_exact <- metagen(
   TE = WR_exact,
   studlab = study_label,
@@ -506,6 +529,12 @@ m_6_approx <- metagen(
   data = subset(sbp_bmi, time_group == "≤6 months")
 )
 
+m_6monly_approx <- metagen(
+  TE = WR_approx,
+  studlab = study_label,
+  seTE = WR_SE_approx,
+  data = sbp_bmi_6m
+)
 m_12_24_approx <- metagen(
   TE = WR_approx,
   studlab = study_label,
@@ -522,6 +551,20 @@ pdf(
   height = 16)
 forest(
   m_6_unadj,
+  prediction = FALSE,
+  xlim = c(-10, 10),
+  xlab = "SBP/BMI Wald ratio (unadjusted seTE)",
+  leftlabs = c("Study")
+)
+dev.off()
+
+dev.new(width = 16, height = 14)
+pdf(
+  "output/glp1ra/figures/sbp_bmi_6monthsonly_forestunajd.pdf",
+  width = 16,
+  height = 14)
+forest(
+  m_6monly_unadj,
   prediction = FALSE,
   xlim = c(-10, 10),
   xlab = "SBP/BMI Wald ratio (unadjusted seTE)",
@@ -556,6 +599,19 @@ forest(
 dev.off()
 
 pdf(
+  "output/glp1ra/figures/sbp_bmi_6monthsonly_forestExact.pdf",
+  width = 16,
+  height = 14)
+forest(
+  m_6monly_exact,
+  prediction = FALSE,
+  xlim = c(-10, 10),
+  xlab = "SBP/BMI Wald ratio (exact adjusted seTE)",
+  leftlabs = c("Study")
+)
+dev.off()
+
+pdf(
   "output/glp1ra/figures/sbp_bmi_12-24months_forestExact.pdf",
   width = 14,
   height = 7)
@@ -581,6 +637,19 @@ forest(
 dev.off()
 
 pdf(
+  "output/glp1ra/figures/sbp_bmi_6monthsonly_forestapproxajd.pdf",
+  width = 16,
+  height =14)
+forest(
+  m_6monly_approx,
+  prediction = FALSE,
+  xlim = c(-10, 10),
+  xlab = "SBP/BMI Wald ratio (approximate adjusted seTE)",
+  leftlabs = c("Study")
+)
+dev.off()
+
+pdf(
   "output/glp1ra/figures/sbp_bmi_12-24months_forestapproxadj.pdf",
   width = 14,
   height = 7)
@@ -597,21 +666,34 @@ dev.off()
 dbp_bmi$study_label <- paste(
   dbp_bmi$study_id,
   ":",
-  dbp_bmi$treat1,
+  gsub("_$", "", gsub("_Control", "", gsub("_Intervention_", "_", dbp_bmi$treat1))),
   "vs",
-  dbp_bmi$treat2
+  gsub("_$", "", gsub("_Control", "", gsub("_Intervention_", "_", dbp_bmi$treat2)))
 )
+dbp_bmi
 dbp_bmi$time_group <- dplyr::case_when(
   dbp_bmi$months <= 6~ "≤6 months",
   dbp_bmi$months >= 12 & dbp_bmi$months <= 24 ~ "12-24 months",
   TRUE ~ "Other"
 )
 
+########## 6 months only
+dbp_bmi_6m <- dbp_bmi |>
+  dplyr::filter(months == 6)
+dbp_bmi_6m
+
 m_6_unadj <- metagen(
   TE = WR_unadj,
   studlab = study_label,
   seTE = WR_SE_unadj,
   data = subset(dbp_bmi, time_group == "≤6 months")
+)
+
+m_6monly_unadj <- metagen(
+  TE = WR_unadj,
+  studlab = study_label,
+  seTE = WR_SE_unadj,
+  data = dbp_bmi_6m
 )
 
 m_12_24_unadj <- metagen(
@@ -628,6 +710,13 @@ m_6_exact <- metagen(
   data = subset(dbp_bmi, time_group == "≤6 months")
 )
 
+m_6monly_exact <- metagen(
+  TE = WR_exact,
+  studlab = study_label,
+  seTE = WR_SE_exact,
+  data = dbp_bmi_6m
+)
+
 m_12_24_exact <- metagen(
   TE = WR_exact,
   studlab = study_label,
@@ -641,6 +730,13 @@ m_6_approx <- metagen(
   seTE = WR_SE_approx,
   data = subset(dbp_bmi, time_group == "≤6 months")
 )
+
+m_6monly_approx <- metagen(
+  TE = WR_approx,
+  studlab = study_label,
+  seTE = WR_SE_approx,
+  data = dbp_bmi_6m
+  )
 
 m_12_24_approx <- metagen(
   TE = WR_approx,
@@ -658,6 +754,20 @@ pdf(
   height = 16)
 forest(
   m_6_unadj,
+  prediction = FALSE,
+  xlim = c(-10, 10),
+  xlab = "DBP/BMI Wald ratio (unadjusted seTE)",
+  leftlabs = c("Study")
+)
+dev.off()
+
+dev.new(width = 16, height = 14)
+pdf(
+  "output/glp1ra/figures/dbp_bmi_6monthsonly_forestunajd.pdf",
+  width = 16,
+  height = 14)
+forest(
+  m_6monly_unadj,
   prediction = FALSE,
   xlim = c(-10, 10),
   xlab = "DBP/BMI Wald ratio (unadjusted seTE)",
@@ -692,6 +802,19 @@ forest(
 dev.off()
 
 pdf(
+  "output/glp1ra/figures/dbp_bmi_6monthsonly_forestExact.pdf",
+  width = 16,
+  height = 14)
+forest(
+  m_6monly_exact,
+  prediction = FALSE,
+  xlim = c(-10, 10),
+  xlab = "DBP/BMI Wald ratio (exact adjusted seTE)",
+  leftlabs = c("Study")
+)
+dev.off()
+
+pdf(
   "output/glp1ra/figures/dbp_bmi_12-24months_forestExact.pdf",
   width = 14,
   height = 7)
@@ -709,6 +832,19 @@ pdf(
   height =16)
 forest(
   m_6_approx,
+  prediction = FALSE,
+  xlim = c(-10, 10),
+  xlab = "DBP/BMI Wald ratio (approximate adjusted seTE)",
+  leftlabs = c("Study")
+)
+dev.off()
+
+pdf(
+  "output/glp1ra/figures/dbp_bmi_6monthsonly_forestapproxajd.pdf",
+  width = 16,
+  height =14)
+forest(
+  m_6monly_approx,
   prediction = FALSE,
   xlim = c(-10, 10),
   xlab = "DBP/BMI Wald ratio (approximate adjusted seTE)",
