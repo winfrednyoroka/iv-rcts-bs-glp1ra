@@ -33,7 +33,11 @@ baseline_post <- baseline_post |>
   filter( !grepl ('Lam', author_year))
 baseline_post
 
-# create unique ID by time in months
+# Hand calculate IV estimate for two arms (manual- hands on)
+baseline_post |> 
+  filter(grepl('Frandsen',author_year)) |> 
+  select(Outcome, treatment_group,post_mean, post_lowerbound, post_upperbound, post_samplesize)
+# Create unique ID by time in months
 baseline_post$study_id <- with(
   baseline_post,
   paste(author_year, Outcome, post_time_months, sep = "_")
@@ -42,7 +46,7 @@ glimpse(baseline_post)
 # BMI subset
 bmi <- subset(baseline_post, Outcome == "BMI")
 bmi
-library(netmeta)
+
 
 pw_bmi <- pairwise(
   treat = ARMID,
@@ -60,7 +64,7 @@ glimpse(pw_bmi)
 # check data sanity before proceeding
 sort(unique(pw_bmi$treat1))
 sort(unique(pw_bmi$treat2))
-head(pw[, c("studlab", "treat1", "treat2")])
+head(pw_bmi[, c("studlab", "treat1", "treat2")])
 
 pw_bmi$treat1 <- sub("^[0-9]+_", "", pw_bmi$treat1)
 pw_bmi$treat2 <- sub("^[0-9]+_", "", pw_bmi$treat2)
@@ -123,7 +127,7 @@ glimpse(pw_sbp)
 # check data sanity before proceeding
 sort(unique(pw_sbp$treat1))
 sort(unique(pw_sbp$treat2))
-head(pw[, c("studlab", "treat1", "treat2")])
+head(pw_sbp[, c("studlab", "treat1", "treat2")])
 
 pw_sbp$treat1 <- sub("^[0-9]+_", "", pw_sbp$treat1)
 pw_sbp$treat2 <- sub("^[0-9]+_", "", pw_sbp$treat2)
@@ -182,7 +186,7 @@ glimpse(pw_sbp)
 # check data sanity before proceeding
 sort(unique(pw_sbp$treat1))
 sort(unique(pw_sbp$treat2))
-head(pw[, c("studlab", "treat1", "treat2")])
+head(pw_sbp[, c("studlab", "treat1", "treat2")])
 
 pw_sbp$treat1 <- sub("^[0-9]+_", "", pw_sbp$treat1)
 pw_sbp$treat2 <- sub("^[0-9]+_", "", pw_sbp$treat2)
@@ -240,10 +244,10 @@ pw_dbp <- pairwise(
 glimpse(pw_dbp)
 
 #######################
-# check data sanity before proceeding
+# Check data sanity before proceeding
 sort(unique(pw_dbp$treat1))
 sort(unique(pw_dbp$treat2))
-head(pw[, c("studlab", "treat1", "treat2")])
+head(pw_dbp[, c("studlab", "treat1", "treat2")])
 
 pw_dbp$treat1 <- sub("^[0-9]+_", "", pw_dbp$treat1)
 pw_dbp$treat2 <- sub("^[0-9]+_", "", pw_dbp$treat2)
