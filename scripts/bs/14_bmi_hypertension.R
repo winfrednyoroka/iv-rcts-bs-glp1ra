@@ -144,7 +144,7 @@ glimpse(rd_dat)
 
 # Save the plot with no meta-analysis (pdf for presentations and jpeg for manuscript)
 pdf(
-  "output/bs/figures/bmi_htn_forestnometa-analysis.pdf",
+  "output/bs/figures/ivanalysis/htn/bmi_htn_forestnometa-analysis.pdf",
   width = 11,
   height = 5.5
 )
@@ -191,7 +191,7 @@ text(-0.06, 7, "Control", font = 2)
 dev.off()
 
 jpeg(
-  "output/bs/figures/bmi_htn_forestnometa-analysis.jpeg",
+  "output/bs/figures/ivanalysis/htn/bmi_htn_forestnometa-analysis.jpeg",
   width = 11,
   height = 5.5,
   units = 'in',
@@ -258,7 +258,7 @@ res_iv <- rma(
 summary(res_iv)
 
 pdf(
-  "output/bs/figures/bmi_htn_forest.pdf",
+  "output/bs/figures/ivanalysis/htn/bmi_htn_forest.pdf",
   width = 11,
   height = 6)
 par(mar = c(5, 2, 2, 2))
@@ -274,6 +274,13 @@ forest(
   refline = 0,
   cex = 1.2,
   lwd = 1.2,
+  mlab = paste0(
+    "Fixed-effect model (Q = ",
+    round(res_iv$QE, 2),
+    "; p = ",
+    format.pval(res_iv$QEp, digits = 2, eps = 0.001),
+    ")"
+  ),
   xlab = "Increase in hypertension prevalence per 1 kg/m² increase in BMI"
 )
 text(-.135, 5, "Time", font = 2)
@@ -282,7 +289,7 @@ text(-0.02, 5, "Control", font = 2)
 dev.off()
 
 jpeg(
-  "output/bs/figures/bmi_htn_forest.jpeg",
+  "output/bs/figures/ivanalysis/htn/bmi_htn_forest.jpeg",
   width = 11,
   height = 6,
   units = 'in',
@@ -300,6 +307,13 @@ forest(
   refline = 0,
   cex = 1.2,
   lwd = 1.2,
+  mlab = paste0(
+    "Fixed-effect model (Q = ",
+    round(res_iv$QE, 2),
+    "; p = ",
+    format.pval(res_iv$QEp, digits = 2, eps = 0.001),
+    ")"
+  ),
   xlab = "Increase in hypertension prevalence per 1 kg/m² increase in BMI"
 )
 text(-.135, 5, "Time", font = 2)
