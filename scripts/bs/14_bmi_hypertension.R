@@ -241,8 +241,9 @@ dev.off()
 
 
 ##################################################################################
-# Meta-analysis
+# Meta-analysis of IV estimates for studies with HTN outcome at 12 months
 # Filter out the three studies with hypertension outcome at 12 months
+# Save pdf (for ppts) and jpeg (for manuscript) files
 ##################################################################################
 bmi_htn_12 <- rd_dat |> 
   filter(Time_months == 12)
@@ -260,13 +261,50 @@ pdf(
   "output/bs/figures/bmi_htn_forest.pdf",
   width = 11,
   height = 6)
+par(mar = c(5, 2, 2, 2))
 forest(
   res_iv,
-  slab = paste(bmi_htn_12$StudyID,
-               bmi_htn_12$Time_months,
-               "months"),
+  slab = bmi_htn_12$StudyID,
+  ilab = cbind(
+    bmi_htn_12$Time_months,
+    bmi_htn_12$Arm_Intervention,
+    bmi_htn_12$Arm_Control
+  ),
+  ilab.xpos = c(-.135, -.08, -0.02),
+  refline = 0,
+  cex = 1.2,
+  lwd = 1.2,
   xlab = "Increase in hypertension prevalence per 1 kg/m² increase in BMI"
 )
+text(-.135, 5, "Time", font = 2)
+text(-.08, 5, "Intervention", font = 2)
+text(-0.02, 5, "Control", font = 2)
+dev.off()
+
+jpeg(
+  "output/bs/figures/bmi_htn_forest.jpeg",
+  width = 11,
+  height = 6,
+  units = 'in',
+  res = 600)
+par(mar = c(5, 2, 2, 2))
+forest(
+  res_iv,
+  slab = bmi_htn_12$StudyID,
+  ilab = cbind(
+    bmi_htn_12$Time_months,
+    bmi_htn_12$Arm_Intervention,
+    bmi_htn_12$Arm_Control
+  ),
+  ilab.xpos = c(-.135, -.08, -0.02),
+  refline = 0,
+  cex = 1.2,
+  lwd = 1.2,
+  xlab = "Increase in hypertension prevalence per 1 kg/m² increase in BMI"
+)
+text(-.135, 5, "Time", font = 2)
+text(-.08, 5, "Intervention", font = 2)
+text(-0.02, 5, "Control", font = 2)
 dev.off()
 
 ##################################################################
