@@ -110,6 +110,7 @@ rd_dat <- rd_dat |>
   )
 glimpse(rd_dat)
 
+# View select columns
 rd_dat |> 
   select(
     StudyID,
@@ -119,6 +120,7 @@ rd_dat |>
     SE_RD,
     IV,
     SE_IV,
+    VI_IV,
     Arm_Intervention,
     Arm_Control
   )
@@ -133,66 +135,111 @@ rd_dat <- rd_dat |>
     
     IV = RD / BMI_diff,
     
-    SE_IV = SE_RD / BMI_diff,
+    SE_IV = abs(SE_RD / BMI_diff),
     
     lower_IV = IV - 1.96 * SE_IV,
     upper_IV = IV + 1.96 * SE_IV
   )
 glimpse(rd_dat)
 
-# Save the plot with no meta-analysis
+# Save the plot with no meta-analysis (pdf for presentations and jpeg for manuscript)
 pdf(
   "output/bs/figures/bmi_htn_forestnometa-analysis.pdf",
-  width = 8,
-  height = 6)
-forest(
-  x = rd_dat$IV,
-  ci.lb = rd_dat$lower_IV,
-  ci.ub = rd_dat$upper_IV,
-  
-  slab = paste0(
-    rd_dat$StudyID,
-    " (",
-    rd_dat$Time_months,
-    " months)"
-  ),
-  
-  xlab = "Increase in hypertension prevalence per 1 kg/m² increase in BMI change",
-  
-  refline = 0
+  width = 11,
+  height = 5.5
 )
-dev.off()
 
+par(mar = c(5, 2, 2, 2))
 
-library(metafor)
-
-pdf(
-  "output/bs/figures/trialanderror.pdf",
-  width = 8,
-  height = 6)
 forest(
   x = rd_dat$IV,
   ci.lb = rd_dat$lower_IV,
   ci.ub = rd_dat$upper_IV,
   
-  slab = paste0(rd_dat$StudyID, " (", rd_dat$Time_months, " mo)"),
+  slab = rd_dat$StudyID,
   
+  # Text columns
   ilab = cbind(
+    rd_dat$Time_months,
     rd_dat$Arm_Intervention,
     rd_dat$Arm_Control
   ),
   
-  ilab.xpos = c(-0.4, -0.2),
+  # These are ALL to the left of the forest plot
+  ilab.xpos = c(-.30, -.19, -0.06),
   
-  xlim = c(-1.5, 0.5),
+  
+  xlim = c(-.5, 0.6),
+  
+  # forest plot
+  alim = c(0, 0.4),
+  
+  at = c(0, 0.1, 0.2, 0.3, 0.4),
+  
   refline = 0,
+  
+  cex = 1.2,
+  lwd = 1.2,
   
   xlab = "Increase in hypertension prevalence per 1 kg/m² increase in BMI change"
 )
 
-text(-0.4, 7, "Intervention", font = 2)
-text(-0.2, 7, "Control", font = 2)
+text(-.30, 7, "Time", font = 2)
+text(-.19, 7, "Intervention", font = 2)
+text(-0.06, 7, "Control", font = 2)
+
 dev.off()
+
+jpeg(
+  "output/bs/figures/bmi_htn_forestnometa-analysis.jpeg",
+  width = 11,
+  height = 5.5,
+  units = 'in',
+  res = 600
+)
+
+par(mar = c(5, 2, 2, 2))
+
+forest(
+  x = rd_dat$IV,
+  ci.lb = rd_dat$lower_IV,
+  ci.ub = rd_dat$upper_IV,
+  
+  slab = rd_dat$StudyID,
+  
+  # Text columns
+  ilab = cbind(
+    rd_dat$Time_months,
+    rd_dat$Arm_Intervention,
+    rd_dat$Arm_Control
+  ),
+  
+  # These are ALL to the left of the forest plot
+  ilab.xpos = c(-.30, -.19, -0.06),
+  
+  
+  xlim = c(-.5, 0.6),
+  
+  # forest plot
+  alim = c(0, 0.4),
+  
+  at = c(0, 0.1, 0.2, 0.3, 0.4),
+  
+  refline = 0,
+  
+  cex = 1.2,
+  lwd = 1.2,
+  
+  xlab = "Increase in hypertension prevalence per 1 kg/m² increase in BMI change"
+)
+
+text(-.30, 7, "Time", font = 2)
+text(-.19, 7, "Intervention", font = 2)
+text(-0.06, 7, "Control", font = 2)
+
+dev.off()
+
+
 ##################################################################################
 # Meta-analysis
 # Filter out the three studies with hypertension outcome at 12 months
@@ -228,3 +275,10 @@ dev.off()
 glimpse(rd_dat)
 saveRDS(file='data/bs/processed/bmi_htnprocessed.rds',object = rd_dat)
 write_csv(x= rd_dat, 'output/bs/tables/bmi_htnRDandIVestimates.csv')
+
+
+
+
+
+
+
