@@ -78,7 +78,7 @@ wr_bmi12_sbp24 <- wr_bmi12_sbp24 |>  wald_ratio(
 )
 wr_bmi12_sbp24
 
-# Drop rows wiht NAs
+# Drop rows with NAs
 wr_bmi12_sbp24_clean <- wr_bmi12_sbp24 |> 
   filter(
     !is.na(WR),
