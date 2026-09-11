@@ -18,6 +18,7 @@
 #   quad_model      : Previously fitted metafor::rma() meta-regression model.
 #   study_var  : Optional character string containing study labels to be
 #                displayed beside each data point.
+#   size_var   : Optional numeric data containing sample size.
 #   xlab       : Optional x-axis label.
 #   ylab       : Optional y-axis label.
 #   line_col   : Colour of the fitted regression line.
@@ -49,17 +50,20 @@
 #   linear_model = bmi_sbp_12_res,
 #   quad_model = bmi_sbp_12_res_quad,
 #   study_var = "study",
+#   size_var = 'SampleSize',
 #   xlab = "BMI difference at 12 months (kg/m²)",
 #   ylab = "SBP difference at 12 months (mmHg)"
 # )
 #
 ###############################################################################
+
 plot_meta_regression <- function(data,
                                  xvar,
                                  yvar,
                                  linear_model,
                                  quadratic_model = NULL,
                                  study_var = NULL,
+                                 size_var = NULL,
                                  xlab = NULL,
                                  ylab = NULL,
                                  linear_col = "green",
@@ -69,10 +73,24 @@ plot_meta_regression <- function(data,
   x <- data[[xvar]]
   y <- data[[yvar]]
   
+  # Scale point sizes
+  if (is.null(size_var)) {
+    cex_pts <- 1.2
+  } else {
+    n <- data[[size_var]]
+    
+    # Scale sample sizes to a sensible plotting range
+    cex_pts <- scales::rescale(
+      n,
+      to = c(0.8, 3)
+    )
+  }
+  
   plot(
     x, y,
     pch = 19,
     col = point_col,
+    cex = cex_pts,
     xlab = ifelse(is.null(xlab), xvar, xlab),
     ylab = ifelse(is.null(ylab), yvar, ylab)
   )
@@ -98,7 +116,6 @@ plot_meta_regression <- function(data,
     length.out = 100
   )
   
-  # Linear fit
   pred_lin <- predict(
     linear_model,
     newmods = matrix(x_pred, ncol = 1)
@@ -111,7 +128,6 @@ plot_meta_regression <- function(data,
     lwd = 2
   )
   
-  # Optional quadratic fit
   if (!is.null(quadratic_model)) {
     
     pred_quad <- predict(
@@ -143,6 +159,5 @@ plot_meta_regression <- function(data,
       lwd = 2,
       bty = "n"
     )
-    
   }
 }
