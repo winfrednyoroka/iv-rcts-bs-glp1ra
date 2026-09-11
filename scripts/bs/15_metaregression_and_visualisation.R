@@ -133,7 +133,7 @@ jpeg(filename = 'output/bs/figures/meta-regression/sbp/bmi12_sbp12_linreg.jpeg',
      res = 600,
      quality = 100)
 plot_meta_regression(data = bmi12_sbp12, xvar = "beta_BMI_12", yvar = "beta_SBP_12",
-  linear_model = bmi_sbp_12_res, study_var = "study_id",
+  linear_model = bmi_sbp_12_res, study_var = "study_id", size_var = 'N_total',
   xlab = "BMI difference at 12 months (kg/m²)", ylab = "SBP difference at 12 months (mmHg)"
 )
 dev.off()
@@ -144,7 +144,7 @@ jpeg(filename = 'output/bs/figures/meta-regression/sbp/bmi24_sbp24_linreg.jpeg',
      res = 600,
      quality = 100)
 plot_meta_regression(data = bmi24_sbp24, xvar = "beta_BMI_24", yvar = "beta_SBP_24",
-  linear_model = bmi_sbp_24_res, study_var = "study_id", 
+  linear_model = bmi_sbp_24_res, study_var = "study_id", size_var = 'N_total',
   xlab = "BMI difference at 24 months (kg/m²)", ylab = "SBP difference at 24 months (mmHg)"
 )
 dev.off()
@@ -155,7 +155,7 @@ jpeg(filename = 'output/bs/figures/meta-regression/dbp/bmi12_dbp12_linreg.jpeg',
      res = 600,
      quality = 100)
 plot_meta_regression(data = bmi12_dbp12, xvar = "beta_BMI_12", yvar = "beta_DBP_12",
-                     linear_model = bmi_dbp_12_res, study_var = "study_id",
+                     linear_model = bmi_dbp_12_res, study_var = "study_id", size_var = 'N_total',
                      xlab = "BMI difference at 12 months (kg/m²)", ylab = "DBP difference at 12 months (mmHg)"
 )
 dev.off()
@@ -166,7 +166,7 @@ jpeg(filename = 'output/bs/figures/meta-regression/dbp/bmi24_dbp24_linreg.jpeg',
      res = 600,
      quality = 100)
 plot_meta_regression(data = bmi24_dbp24, xvar = "beta_BMI_24", yvar = "beta_DBP_24",
-                     linear_model = bmi_dbp_24_res, study_var = "study_id", 
+                     linear_model = bmi_dbp_24_res, study_var = "study_id", size_var = 'N_total',
                      xlab = "BMI difference at 24 months (kg/m²)", ylab = "DBP difference at 24 months (mmHg)"
 )
 dev.off()
@@ -177,7 +177,7 @@ jpeg(filename = 'output/bs/figures/meta-regression/sbp/bmi12_sbp24_linreg.jpeg',
      res = 600,
      quality = 100)
 plot_meta_regression(data = bmi12_sbp24, xvar = "beta_BMI_12", yvar = "beta_SBP_24",
-                     linear_model = bmi12_sbp_24_res, study_var = "study_id", 
+                     linear_model = bmi12_sbp_24_res, study_var = "study_id", size_var = 'N_total',
                      xlab = "BMI difference at 12 months (kg/m²)", ylab = "SBP difference at 24 months (mmHg)"
 )
 dev.off()
@@ -189,7 +189,7 @@ jpeg(filename = 'output/bs/figures/meta-regression/dbp/bmi12_dbp24_linreg.jpeg',
      res = 600,
      quality = 100)
 plot_meta_regression(data = bmi12_dbp24, xvar = "beta_BMI_12", yvar = "beta_DBP_24",
-                     linear_model = bmi12_dbp_24_res, study_var = "study_id",
+                     linear_model = bmi12_dbp_24_res, study_var = "study_id", size_var = 'N_total',
                      xlab = "BMI difference at 12 months (kg/m²)", ylab = "DBP difference at 24 months (mmHg)")
 
 dev.off()
@@ -203,7 +203,7 @@ jpeg(filename = 'output/bs/figures/meta-regression/sbp/bmi12_sbp12_lin_quadreg.j
      quality = 100)
 plot_meta_regression(data = bmi12_sbp12, xvar = "beta_BMI_12", yvar = "beta_SBP_12",
                      linear_model = bmi_sbp_12_res,quadratic_model = bmi_sbp_12_res_quad, study_var = "study_id",
-                     xlab = "BMI difference at 12 months (kg/m²)", ylab = "SBP difference at 12 months (mmHg)"
+                     size_var = 'N_total', xlab = "BMI difference at 12 months (kg/m²)", ylab = "SBP difference at 12 months (mmHg)"
 )
 dev.off()
 
@@ -214,7 +214,7 @@ jpeg(filename = 'output/bs/figures/meta-regression/sbp/bmi24_sbp24_lin_quadreg.j
      quality = 100)
 plot_meta_regression(data = bmi24_sbp24, xvar = "beta_BMI_24", yvar = "beta_SBP_24",
                      linear_model = bmi_sbp_24_res,quadratic_model = bmi_sbp_24_res_quad, study_var = "study_id", 
-                     xlab = "BMI difference at 24 months (kg/m²)", ylab = "SBP difference at 24 months (mmHg)"
+                     size_var = 'N_total', xlab = "BMI difference at 24 months (kg/m²)", ylab = "SBP difference at 24 months (mmHg)"
 )
 dev.off()
 
@@ -225,7 +225,7 @@ jpeg(filename = 'output/bs/figures/meta-regression/dbp/bmi12_dbp12_lin_quadreg.j
      quality = 100)
 plot_meta_regression(data = bmi12_dbp12, xvar = "beta_BMI_12", yvar = "beta_DBP_12",
                      linear_model = bmi_dbp_12_res, quadratic_model = bmi_dbp_12_res_quad, study_var = "study_id",
-                     xlab = "BMI difference at 12 months (kg/m²)", ylab = "DBP difference at 12 months (mmHg)"
+                     size_var = 'N_total', xlab = "BMI difference at 12 months (kg/m²)", ylab = "DBP difference at 12 months (mmHg)"
 )
 dev.off()
 
@@ -236,7 +236,7 @@ jpeg(filename = 'output/bs/figures/meta-regression/dbp/bmi24_dbp24_lin_quadreg.j
      quality = 100)
 plot_meta_regression(data = bmi24_dbp24, xvar = "beta_BMI_24", yvar = "beta_DBP_24",
                      linear_model = bmi_dbp_24_res, quadratic_model = bmi_dbp_24_res_quad, study_var = "study_id", 
-                     xlab = "BMI difference at 24 months (kg/m²)", ylab = "DBP difference at 24 months (mmHg)"
+                     size_var = 'N_total', xlab = "BMI difference at 24 months (kg/m²)", ylab = "DBP difference at 24 months (mmHg)"
 )
 dev.off()
 
@@ -246,8 +246,8 @@ jpeg(filename = 'output/bs/figures/meta-regression/sbp/bmi12_sbp24_lin_quadreg.j
      res = 600,
      quality = 100)
 plot_meta_regression(data = bmi12_sbp24, xvar = "beta_BMI_12", yvar = "beta_SBP_24",
-                     linear_model = bmi12_sbp_24_res, quadratic_model = bmi12_sbp_24_res_quad, study_var = "study_id", 
-                     xlab = "BMI difference at 12 months (kg/m²)", ylab = "SBP difference at 24 months (mmHg)"
+                     linear_model = bmi12_sbp_24_res, quadratic_model = bmi12_sbp_24_res_quad, study_var = "study_id",
+                     size_var = 'N_total',xlab = "BMI difference at 12 months (kg/m²)", ylab = "SBP difference at 24 months (mmHg)"
 )
 dev.off()
 
@@ -259,7 +259,7 @@ jpeg(filename = 'output/bs/figures/meta-regression/dbp/bmi12_dbp24_lin_quadreg.j
      quality = 100)
 plot_meta_regression(data = bmi12_dbp24, xvar = "beta_BMI_12", yvar = "beta_DBP_24",
                      linear_model = bmi12_dbp_24_res, quadratic_model = bmi12_dbp_24_res_quad, study_var = "study_id",
-                     xlab = "BMI difference at 12 months (kg/m²)", ylab = "DBP difference at 24 months (mmHg)")
+                     size_var = 'N_total', xlab = "BMI difference at 12 months (kg/m²)", ylab = "DBP difference at 24 months (mmHg)")
 
 dev.off()
 
