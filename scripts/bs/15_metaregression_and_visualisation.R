@@ -72,57 +72,57 @@ glimpse(bmi12_dbp24)
 
 # bmi and bp at 12 months
 bmi_sbp_12_res <- rma(yi = beta_SBP_12 , vi = vi, mods = ~ beta_BMI_12,
-  data = bmi12_sbp12, method = "FE" )
+  data = bmi12_sbp12, method = "REML" )
 summary(bmi_sbp_12_res)
 
 bmi_dbp_12_res <- rma(yi = beta_DBP_12 , vi = vi, mods = ~ beta_BMI_12,
-  data = bmi12_dbp12, method = "FE")
+  data = bmi12_dbp12, method = "REML")
 summary(bmi_dbp_12_res)
 
 # bmi and bp at 24 months
 bmi_sbp_24_res <- rma(yi = beta_SBP_24 , vi = vi, mods = ~ beta_BMI_24,
-                      data = bmi24_sbp24, method = "FE" )
+                      data = bmi24_sbp24, method = "REML" )
 summary(bmi_sbp_24_res)
 
 bmi_dbp_24_res <- rma(yi = beta_DBP_24 , vi = vi, mods = ~ beta_BMI_24,
-                      data = bmi24_dbp24, method = "FE")
+                      data = bmi24_dbp24, method = "REML")
 summary(bmi_dbp_24_res)
 
 # bmi at 12 months and bp at 24 months
 bmi12_sbp_24_res <- rma(yi = beta_SBP_24 , vi = vi, mods = ~ beta_BMI_12,
-                        data = bmi12_sbp24, method = "FE" )
+                        data = bmi12_sbp24, method = "REML" )
 summary(bmi12_sbp_24_res)
 
 bmi12_dbp_24_res <- rma(yi = beta_DBP_24 , vi = vi, mods = ~ beta_BMI_12,
-                        data = bmi12_dbp24, method = "FE")
+                        data = bmi12_dbp24, method = "REML")
 summary(bmi12_dbp_24_res)
 
 ####### Nonlinear meta-regression----
 # bmi and bp at 12 months
 bmi_sbp_12_res_quad <- rma(yi = beta_SBP_12 , vi = vi, mods = ~ beta_BMI_12 + beta_BMI_12_sq,
-                           data = bmi12_sbp12, method = "FE" )
+                           data = bmi12_sbp12, method = "REML" )
 summary(bmi_sbp_12_res_quad)
 
 bmi_dbp_12_res_quad <- rma(yi = beta_DBP_12 , vi = vi, mods = ~ beta_BMI_12 + beta_BMI_12_sq,
-                           data = bmi12_dbp12, method = "FE")
+                           data = bmi12_dbp12, method = "REML")
 summary(bmi_dbp_12_res_quad)
 
 # bmi and bp at 24 months
 bmi_sbp_24_res_quad <- rma(yi = beta_SBP_24 , vi = vi, mods = ~ beta_BMI_24 + beta_BMI_24_sq,
-                           data = bmi24_sbp24, method = "FE" )
+                           data = bmi24_sbp24, method = "REML" )
 summary(bmi_sbp_24_res_quad)
 
 bmi_dbp_24_res_quad <- rma(yi = beta_DBP_24 , vi = vi, mods = ~ beta_BMI_24 + beta_BMI_24_sq,
-                           data = bmi24_dbp24, method = "FE")
+                           data = bmi24_dbp24, method = "REML")
 summary(bmi_dbp_24_res_quad)
 
 # bmi at 12 months and bp at 24 months
 bmi12_sbp_24_res_quad <- rma(yi = beta_SBP_24 , vi = vi, mods = ~ beta_BMI_12 + beta_BMI_12_sq,
-                             data = bmi12_sbp24, method = "FE" )
+                             data = bmi12_sbp24, method = "REML" )
 summary(bmi12_sbp_24_res_quad)
 
 bmi12_dbp_24_res_quad <- rma(yi = beta_DBP_24 , vi = vi, mods = ~ beta_BMI_12 + beta_BMI_12_sq,
-                             data = bmi12_dbp24, method = "FE")
+                             data = bmi12_dbp24, method = "REML")
 summary(bmi12_dbp_24_res_quad)
 
 # Visualise the linear regression
