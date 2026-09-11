@@ -55,39 +55,39 @@ glimpse(bmi24_dbp24)
 
 # bmi and bp at 6 months
 bmi_sbp_6_res <- rma(yi = SBPTE , vi = vi, mods = ~ BMITE,
-                      data = bmi6_sbp6, method = "FE" )
+                      data = bmi6_sbp6, method = "REML" )
 summary(bmi_sbp_6_res)
 
 bmi_dbp_6_res <- rma(yi = DBPTE , vi = vi, mods = ~ BMITE,
-                      data = bmi6_dbp6, method = "FE")
+                      data = bmi6_dbp6, method = "REML")
 summary(bmi_dbp_6_res)
 
 # bmi and bp at 24 months
 bmi_sbp_24_res <- rma(yi = SBPTE , vi = vi, mods = ~ BMITE,
-                      data = bmi24_sbp24, method = "FE" )
+                      data = bmi24_sbp24, method = "REML" )
 summary(bmi_sbp_24_res)
 
 bmi_dbp_24_res <- rma(yi = DBPTE , vi = vi, mods = ~ BMITE,
-                      data = bmi24_dbp24, method = "FE")
+                      data = bmi24_dbp24, method = "REML")
 summary(bmi_dbp_24_res)
 
 ####### Nonlinear meta-regression----
 # bmi and bp at 6 months
 bmi_sbp_6_res_quad <- rma(yi = SBPTE , vi = vi, mods = ~ BMITE + BMITE_sq,
-                     data = bmi6_sbp6, method = "FE" )
+                     data = bmi6_sbp6, method = "REML" )
 summary(bmi_sbp_6_res_quad)
 
 bmi_dbp_6_res_quad <- rma(yi = DBPTE , vi = vi, mods = ~ BMITE + BMITE_sq,
-                     data = bmi6_dbp6, method = "FE")
+                     data = bmi6_dbp6, method = "REML")
 summary(bmi_dbp_6_res_quad)
 
 # bmi and bp at 12-24 months
 bmi_sbp_24_res_quad <- rma(yi = SBPTE , vi = vi, mods = ~ BMITE + BMITE_sq,
-                      data = bmi24_sbp24, method = "FE" )
+                      data = bmi24_sbp24, method = "REML" )
 summary(bmi_sbp_24_res_quad)
 
 bmi_dbp_24_res_quad <- rma(yi = DBPTE , vi = vi, mods = ~ BMITE + BMITE_sq,
-                      data = bmi24_dbp24, method = "FE")
+                      data = bmi24_dbp24, method = "REML")
 summary(bmi_dbp_24_res_quad)
 
 # Visualise the linear regression----
