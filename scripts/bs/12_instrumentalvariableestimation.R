@@ -70,13 +70,24 @@ wr_bmi12_sbp24 <- calc_wr(data = effects,
                           exposure_time = 12,
                           outcome_outcome = 'SBP',
                           outcome_time = 24)
+# Estimate total sample size
+wr_bmi12_sbp24 <- wr_bmi12_sbp24 |> mutate(
+    N_total = pmin(
+      samplesize_Intervention_BMI_12 +
+        samplesize_Control_BMI_12,
+      samplesize_Intervention_SBP_24 +
+        samplesize_Control_SBP_24,
+      na.rm = TRUE
+    )
+  )
+
 wr_bmi12_sbp24 <- wr_bmi12_sbp24 |>  wald_ratio(
   beta_y = "beta_SBP_24",
   se_y   = "se_SBP_24",
   beta_x = "beta_BMI_12",
   se_x   = "se_BMI_12"
 )
-wr_bmi12_sbp24
+glimpse(wr_bmi12_sbp24)
 
 # Drop rows with NAs
 wr_bmi12_sbp24_clean <- wr_bmi12_sbp24 |> 
@@ -84,7 +95,7 @@ wr_bmi12_sbp24_clean <- wr_bmi12_sbp24 |>
     !is.na(WR),
     !is.na(WR_SE)
   )
-wr_bmi12_sbp24_clean
+glimpse(wr_bmi12_sbp24_clean)
 # Drop Ikramuddin 2015 - its the same trial as Ikramuddin 2018
 wr_bmi12_sbp24_clean <- wr_bmi12_sbp24_clean |> 
   filter(study_id != 'Ikramuddin (2015)')
@@ -99,6 +110,16 @@ wr_bmi12_dbp24 <- calc_wr(data = effects,
                           exposure_time = 12,
                           outcome_outcome = 'DBP',
                           outcome_time = 24)
+# Estimate total sample size
+wr_bmi12_dbp24 <- wr_bmi12_dbp24 |> mutate(
+  N_total = pmin(
+    samplesize_Intervention_BMI_12 +
+      samplesize_Control_BMI_12,
+    samplesize_Intervention_DBP_24 +
+      samplesize_Control_DBP_24,
+    na.rm = TRUE
+  )
+)
 wr_bmi12_dbp24 <- wr_bmi12_dbp24 |>  wald_ratio(
   beta_y = "beta_DBP_24",
   se_y   = "se_DBP_24",
@@ -117,7 +138,7 @@ wr_bmi12_dbp24_clean
 # Drop Ikramuddin 2015 - its the same trial as Ikramuddin 2018
 wr_bmi12_dbp24_clean <- wr_bmi12_dbp24_clean |> 
   filter(study_id != 'Ikramuddin (2015)')
-wr_bmi12_dbp24_clean
+glimpse(wr_bmi12_dbp24_clean)
 
 # Save rds object and csv----
 saveRDS(wr_bmi12_dbp24_clean, 'data/bs/processed/wr_bmi12_dbp24.rds')
@@ -129,13 +150,24 @@ wr_bmi12_sbp12 <- calc_wr(data = effects,
                           exposure_time = 12,
                           outcome_outcome = 'SBP',
                           outcome_time = 12)
+# Estimate the total sample size
+wr_bmi12_sbp12 <- wr_bmi12_sbp12 |> mutate(
+  N_total = pmin(
+    samplesize_Intervention_BMI_12 +
+      samplesize_Control_BMI_12,
+    samplesize_Intervention_SBP_12 +
+      samplesize_Control_SBP_12,
+    na.rm = TRUE
+  )
+)
+
 wr_bmi12_sbp12 <- wr_bmi12_sbp12 |>  wald_ratio(
   beta_y = "beta_SBP_12",
   se_y   = "se_SBP_12",
   beta_x = "beta_BMI_12",
   se_x   = "se_BMI_12"
 )
-wr_bmi12_sbp12
+glimpse(wr_bmi12_sbp12)
 
 # Drop rows wiht NAs
 wr_bmi12_sbp12_clean <- wr_bmi12_sbp12 |> 
@@ -158,13 +190,23 @@ wr_bmi12_dbp12 <- calc_wr(data = effects,
                           exposure_time = 12,
                           outcome_outcome = 'DBP',
                           outcome_time = 12)
+# Estimate the total sample size
+wr_bmi12_dbp12 <- wr_bmi12_dbp12 |> mutate(
+  N_total = pmin(
+    samplesize_Intervention_BMI_12 +
+      samplesize_Control_BMI_12,
+    samplesize_Intervention_DBP_12 +
+      samplesize_Control_DBP_12,
+    na.rm = TRUE
+  )
+)
 wr_bmi12_dbp12 <- wr_bmi12_dbp12 |>  wald_ratio(
   beta_y = "beta_DBP_12",
   se_y   = "se_DBP_12",
   beta_x = "beta_BMI_12",
   se_x   = "se_BMI_12"
 )
-wr_bmi12_dbp12
+glimpse(wr_bmi12_dbp12)
 
 # Drop rows with NAs
 wr_bmi12_dbp12_clean <- wr_bmi12_dbp12 |> 
@@ -188,13 +230,24 @@ wr_bmi24_sbp24 <- calc_wr(data = effects,
                           exposure_time = 24,
                           outcome_outcome = 'SBP',
                           outcome_time = 24)
+# Estimate the total sample size
+wr_bmi24_sbp24 <- wr_bmi24_sbp24 |> mutate(
+  N_total = pmin(
+    samplesize_Intervention_BMI_24 +
+      samplesize_Control_BMI_24,
+    samplesize_Intervention_SBP_24 +
+      samplesize_Control_SBP_24,
+    na.rm = TRUE
+  )
+)
 wr_bmi24_sbp24 <- wr_bmi24_sbp24 |>  wald_ratio(
   beta_y = "beta_SBP_24",
   se_y   = "se_SBP_24",
   beta_x = "beta_BMI_24",
   se_x   = "se_BMI_24"
 )
-wr_bmi24_sbp24
+glimpse(wr_bmi24_sbp24)
+
 # Drop rows with NAs
 wr_bmi24_sbp24_clean <- wr_bmi24_sbp24 |> 
   filter(
@@ -209,12 +262,23 @@ wr_bmi24_sbp24_clean
 # Save rds object and csv----
 saveRDS(wr_bmi24_sbp24_clean, 'data/bs/processed/wr_bmi24_sbp24.rds')
 write_csv(wr_bmi24_sbp24_clean, 'output/bs/tables/wr_bmi24_sbp24.csv')
+
 # BMI and DBP @24 months----
 wr_bmi24_dbp24 <- calc_wr(data = effects,
                           exposure_outcome = 'BMI',
                           exposure_time = 24,
                           outcome_outcome = 'DBP',
                           outcome_time = 24)
+# Estimate the total sample size
+wr_bmi24_dbp24 <- wr_bmi24_dbp24 |> mutate(
+  N_total = pmin(
+    samplesize_Intervention_BMI_24 +
+      samplesize_Control_BMI_24,
+    samplesize_Intervention_DBP_24 +
+      samplesize_Control_DBP_24,
+    na.rm = TRUE
+  )
+)
 wr_bmi24_dbp24 <- wr_bmi24_dbp24 |>  wald_ratio(
   beta_y = "beta_DBP_24",
   se_y   = "se_DBP_24",
