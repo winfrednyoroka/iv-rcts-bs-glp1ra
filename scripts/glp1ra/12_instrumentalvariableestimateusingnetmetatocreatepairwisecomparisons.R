@@ -44,8 +44,10 @@ glimpse(baseline_post)
 # BMI subset
 bmi <- subset(baseline_post, Outcome == "BMI")
 bmi
+glimpse(bmi)
 
-
+# Pairwise (); creates all possible comparisons----
+# Calculates the treatment effects (TE) and their SEs
 pw_bmi <- pairwise(
   treat = ARMID,
   mean = post_mean,
@@ -68,6 +70,10 @@ pw_bmi$treat1 <- sub("^[0-9]+_", "", pw_bmi$treat1)
 pw_bmi$treat2 <- sub("^[0-9]+_", "", pw_bmi$treat2)
 
 sort(unique(pw_bmi$treat1))
+glimpse(pw_bmi)
+
+# Create total sample size to be used elsewhere----
+pw_bmi$total <- pw_bmi$n1 + pw_bmi$n2
 glimpse(pw_bmi)
 #######################
 # Network connection
@@ -104,68 +110,33 @@ bmi_net <- netmeta(
 BMI_net <- as.data.frame(bmi_net)
 glimpse(BMI_net)
 
-
-##### SBP subset-----
-sbp <- subset(baseline_post, Outcome == "SBP")
-sbp
-
-pw_sbp <- pairwise(
-  treat = ARMID,
-  mean = post_mean,
-  sd = post_sd,
-  n = post_samplesize,
-  studlab = study_id,
-  data = sbp,
-  sm = "MD"
+# Merge the BMI_net output with total sample size from pairwise
+# on studlab
+pw_bmi$comp <- apply(
+  pw_bmi[, c("treat1", "treat2")],
+  1,
+  function(x) paste(sort(x), collapse = "_vs_")
 )
 
-glimpse(pw_sbp)
-
-##############################################
-# check data sanity before proceeding
-sort(unique(pw_sbp$treat1))
-sort(unique(pw_sbp$treat2))
-head(pw_sbp[, c("studlab", "treat1", "treat2")])
-
-pw_sbp$treat1 <- sub("^[0-9]+_", "", pw_sbp$treat1)
-pw_sbp$treat2 <- sub("^[0-9]+_", "", pw_sbp$treat2)
-
-sort(unique(pw_sbp$treat1))
-glimpse(pw_sbp)
-#######################
-# Network connection
-nc <- netconnection( treat1 = pw_sbp$treat1,
-                     treat2 = pw_sbp$treat2,
-                     studlab = pw_sbp$studlab)
-print(nc)
-nc <- netconnection(pw_sbp)
-nc
-print(nc, details = TRUE)
-
-# netgraph
-netgraph(netconnection(
-  treat1 = pw_sbp$treat1,
-  treat2 = pw_sbp$treat2,
-  studlab = pw_sbp$studlab) )
-netgraph(  netconnection(
-  treat1 = pw_sbp$treat1,
-  treat2 = pw_sbp$treat2,
-  studlab = pw_sbp$studlab ),
-  plastic = FALSE,
-  number.of.studies = TRUE)
-
-######################Netmeta for BMI only
-net <- netmeta(
-  TE,
-  seTE,
-  treat1,
-  treat2,
-  studlab,
-  data = pw_sbp
+BMI_net$comp <- apply(
+  BMI_net[, c("treat1", "treat2")],
+  1,
+  function(x) paste(sort(x), collapse = "_vs_")
 )
+
+BMI_net <- merge(
+  BMI_net,
+  pw_bmi[, c("studlab", "comp", "total")],
+  by = c("studlab", "comp"),
+  all.x = TRUE
+)
+
+glimpse(BMI_net)
+glimpse(pw_bmi)
+glimpse(BMI_net)
 
 ########################
-# SBP subset
+# SBP subset-----
 sbp <- subset(baseline_post, Outcome == "SBP")
 sbp
 #Create pairwise comparisons
@@ -191,6 +162,9 @@ pw_sbp$treat2 <- sub("^[0-9]+_", "", pw_sbp$treat2)
 
 sort(unique(pw_sbp$treat1))
 glimpse(pw_sbp)
+# Create total sample size to be used elsewhere----
+pw_sbp$total <- pw_sbp$n1 + pw_sbp$n2
+glimpse(pw_sbp)
 #######################
 # Network connection
 nc <- netconnection( treat1 = pw_sbp$treat1,
@@ -212,18 +186,48 @@ netgraph(  netconnection(
   studlab = pw_sbp$studlab ),
   plastic = FALSE,
   number.of.studies = TRUE)
-
-######################Netmeta for SBP only
+# Calculate the sample sizes at baseline and post to be retained for further analysis
+pw <- pw_sbp |>
+  mutate(
+    post_total = post_samplesize1 + post_samplesize2,
+    baseline_total = baseline_N_per_arm1 + baseline_N_per_arm2
+  )
+glimpse(pw)
+###################### Netmeta for SBP only
 sbp_net <- netmeta(
   TE,
   seTE,
   treat1,
   treat2,
   studlab,
-  data = pw_sbp
+  data = pw
 )
 SBP_net <- as.data.frame(sbp_net)
 glimpse(SBP_net)
+glimpse(pw_sbp)
+
+# Merge the SBP_net output with total sample size from pairwise
+# on studlab
+pw_sbp$comp <- apply(
+  pw_sbp[, c("treat1", "treat2")],
+  1,
+  function(x) paste(sort(x), collapse = "_vs_")
+)
+
+SBP_net$comp <- apply(
+  SBP_net[, c("treat1", "treat2")],
+  1,
+  function(x) paste(sort(x), collapse = "_vs_")
+)
+
+SBP_net <- merge(
+  SBP_net,
+  pw_sbp[, c("studlab", "comp", "total")],
+  by = c("studlab", "comp"),
+  all.x = TRUE
+)
+glimpse(SBP_net)
+glimpse(pw_sbp)
 
 # DBP subset-----
 dbp <- subset(baseline_post, Outcome == "DBP")
@@ -251,6 +255,10 @@ pw_dbp$treat1 <- sub("^[0-9]+_", "", pw_dbp$treat1)
 pw_dbp$treat2 <- sub("^[0-9]+_", "", pw_dbp$treat2)
 
 sort(unique(pw_dbp$treat1))
+glimpse(pw_dbp)
+
+# Create total sample size to be used elsewhere----
+pw_dbp$total <- pw_dbp$n1 + pw_dbp$n2
 glimpse(pw_dbp)
 #######################
 # Network connection
@@ -285,6 +293,30 @@ dbp_net <- netmeta(
 )
 
 DBP_net <- as.data.frame(dbp_net)
+glimpse(DBP_net)
+
+# Merge the SBP_net output with total sample size from pairwise
+# on studlab
+pw_dbp$comp <- apply(
+  pw_dbp[, c("treat1", "treat2")],
+  1,
+  function(x) paste(sort(x), collapse = "_vs_")
+)
+
+DBP_net$comp <- apply(
+  DBP_net[, c("treat1", "treat2")],
+  1,
+  function(x) paste(sort(x), collapse = "_vs_")
+)
+
+DBP_net <- merge(
+  DBP_net,
+  pw_dbp[, c("studlab", "comp", "total")],
+  by = c("studlab", "comp"),
+  all.x = TRUE
+)
+glimpse(DBP_net)
+glimpse(pw_dbp)
 
 ###############################################
 glimpse(BMI_net)
@@ -319,7 +351,8 @@ BMI_net <- BMI_net |>
   dplyr::rename(BMITE = TE,
                 BMISEunadj = seTE,
                 BMISEexactadj = seTE.adj,
-                BMISEapproxadj = seTE.approx
+                BMISEapproxadj = seTE.approx,
+                BMI_total = total
                 )
 
 SBP_net <- SBP_net |>
@@ -327,7 +360,8 @@ SBP_net <- SBP_net |>
     SBPTE = TE,
     SBPSEunadj = seTE,
     SBPSEexactadj = seTE.adj,
-    SBPSEapproxadj = seTE.approx
+    SBPSEapproxadj = seTE.approx,
+    SBP_total = total
   )
 
 DBP_net <- DBP_net |>
@@ -335,7 +369,8 @@ DBP_net <- DBP_net |>
     DBPTE = TE,
     DBPSEunadj = seTE,
     DBPSEexactadj = seTE.adj,
-    DBPSEapproxadj = seTE.approx
+    DBPSEapproxadj = seTE.approx,
+    DBP_total = total
   )
 glimpse(BMI_net)
 glimpse(SBP_net)
@@ -362,18 +397,19 @@ DBP_net <- DBP_net |>
   )
 
 sbp_bmi <- inner_join(
-  SBP_net |> select(study_id,treat1,treat2,SBPTE,SBPSEunadj,SBPSEexactadj,SBPSEapproxadj),
-  BMI_net |> select(study_id,treat1,treat2,BMITE,BMISEunadj,BMISEexactadj,BMISEapproxadj),
+  SBP_net |> select(study_id,treat1,treat2,SBPTE,SBPSEunadj,SBPSEexactadj,SBPSEapproxadj, SBP_total),
+  BMI_net |> select(study_id,treat1,treat2,BMITE,BMISEunadj,BMISEexactadj,BMISEapproxadj, BMI_total),
   by = c("study_id","treat1","treat2")
 )
 sbp_bmi
 
 dbp_bmi <- inner_join(
-  DBP_net |> select(study_id,treat1,treat2,DBPTE,DBPSEunadj,DBPSEexactadj,DBPSEapproxadj),
-  BMI_net |> select(study_id,treat1,treat2,BMITE,BMISEunadj,BMISEexactadj,BMISEapproxadj),
+  DBP_net |> select(study_id,treat1,treat2,DBPTE,DBPSEunadj,DBPSEexactadj,DBPSEapproxadj, DBP_total),
+  BMI_net |> select(study_id,treat1,treat2,BMITE,BMISEunadj,BMISEexactadj,BMISEapproxadj, BMI_total),
   by = c("study_id","treat1","treat2")
 )
 dbp_bmi
+glimpse(dbp_bmi)
 
 #####################################
 # Wald ratio estimator----
@@ -399,7 +435,7 @@ sbp_bmi <- wald_ratio(
   suffix = "_approx"
 )
 sbp_bmi
-
+glimpse(sbp_bmi)
 
 # DBP-----
 dbp_bmi <- wald_ratio(
