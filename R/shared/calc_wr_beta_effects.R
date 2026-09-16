@@ -16,6 +16,6 @@ calc_wr <- function(data,
                   arm_name_Intervention,
                   arm_name_Control),
       names_from = c(Outcome, post_time_months),
-      values_from = c(beta, se)
+      values_from = c(beta, se,samplesize_Intervention,samplesize_Control)
     )
 }
