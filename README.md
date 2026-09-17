@@ -18,7 +18,6 @@ This project evaluates the causal effect of body mass index change on blood pres
 ├── output/         # Generated tables and figures
 ├── R/              # Reusable functions
 ├── scripts/        # Analysis pipelines
-├── tests/          # Tests and validation checks
 ├── renv.lock       # Reproducible package environment
 └── README.md
 ```
